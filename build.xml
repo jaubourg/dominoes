@@ -1,0 +1,103 @@
+<project name="Dominoes" default="dominoes" basedir=".">
+
+	<tstamp>
+		<format property="date" pattern="M/d/y HH:mm:ss.SSS - z" locale="en,US"/>
+	</tstamp>
+
+	<loadfile property="version" srcfile="version.txt" />
+    <property description="Folder for dominoes and min target" name="dist" value="./dist" />
+
+    <property name="DOM" value="${dist}/dominoes.js" />
+    <property name="DOM_TEST" value="${dist}/dominoes.test.js" />
+    <property name="DOM_MIN" value="${dist}/dominoes.min.js" />
+	
+	<available property="qunit" file="test/qunit" />
+	
+	<target name="qunit-clone" unless="qunit">
+		<exec executable="git" outputproperty="git-qunit" >  
+			<arg line="clone git://github.com/jquery/qunit.git test/qunit"/>  
+		</exec>
+		<echo message="git clone qunit: ${git-qunit}" />
+	</target>
+	<target name="qunit-pull" if="qunit">
+		<exec executable="git" outputproperty="git-qunit" dir="test/qunit" >  
+			<arg line="pull origin master"/>  
+		</exec> 
+		<echo message="git pull sizzle: ${git-qunit}" />
+	</target>
+
+    <target name="dominoes" depends="qunit-clone,qunit-pull" description="Main dominoes build, concatenates source files and replaces @VERSION">
+        <echo message="Building ${DOM}" />
+        <mkdir dir="${dist}" />
+        <concat destfile="${DOM}">
+            <fileset file="src/_intro.js" />
+            <fileset file="src/main.js" />
+            <fileset file="src/utils.js" />
+            <fileset file="src/ready.js" />
+            <fileset file="src/property.js" />
+            <fileset file="src/rule.js" />
+            <fileset file="src/exec.js" />
+            <fileset file="src/parse.js" />
+            <fileset file="src/_outro.js" />
+        </concat>
+    	<replaceregexp match="@VERSION" replace="${version}" file="${DOM}" />
+		<replaceregexp match="@DATE" replace="${date}" flags="g" byline="true" file="${DOM}" />
+        <echo message="${DOM} built." />
+    </target>
+
+    <target name="test" depends="qunit-clone,qunit-pull" description="Test version of dominoes with additional inspecting features">
+        <echo message="Building ${DOM_TEST}" />
+        <mkdir dir="${dist}" />
+        <concat destfile="${DOM_TEST}">
+            <fileset file="src/_intro.js" />
+            <fileset file="src/main.js" />
+            <fileset file="src/utils.js" />
+            <fileset file="src/ready.js" />
+            <fileset file="src/property.js" />
+            <fileset file="src/rule.js" />
+            <fileset file="src/exec.js" />
+            <fileset file="src/parse.js" />
+            <fileset file="src/test.js" />
+            <fileset file="src/_outro.js" />
+        </concat>
+    	<replaceregexp match="@VERSION" replace="${version}" file="${DOM_TEST}" />
+		<replaceregexp match="@DATE" replace="${date}" flags="g" byline="true" file="${DOM_TEST}" />
+        <echo message="${DOM_TEST} built." />
+    </target>
+
+    <target name="min" depends="dominoes" description="Minification using Google's Closure Compiler, *very* good in combination with GZip">
+        <echo message="Building ${DOM_MIN}" />
+		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
+			<fileset dir="${dist}">
+				<include name="dominoes.js" />
+			</fileset>
+			<arg line="-jar" />
+			<arg path="build/google-compiler-20091218.jar" />
+			<arg value="--warning_level" />
+			<arg value="QUIET" />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<arg value="--js" />
+			<mapper type="glob" from="dominoes.js" to="tmpmin" />
+		</apply>
+		<concat destfile="${DOM_MIN}">
+			<filelist files="${DOM}, dist/tmpmin"/>
+			<filterchain>
+				<headfilter lines="8"/>
+			</filterchain>
+		</concat>
+		<concat destfile="${DOM_MIN}" append="yes">
+			<filelist files="dist/tmpmin"/>
+		</concat>
+		<delete file="dist/tmpmin"/>
+		<gzip src="${DOM_MIN}" destfile="${DOM_MIN}.gz"/>
+        <echo message="${DOM_MIN} built." />
+    </target>
+
+    <target name="all" depends="clean,dominoes,test,min" />
+    
+    <target name="clean">
+        <delete dir="${dist}" />
+    </target>
+
+</project>
