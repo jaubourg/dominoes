@@ -13,9 +13,30 @@ dominoes.rule = function( id ) {
 			
 		// Create entry no matter what
 		if ( ! ruleInternal ) {
+
+			var go = function() {
+					execute( ruleInternal , function() {
+						if ( running = list.length ) {
+							running--;
+							list.shift()();
+							if ( running ) {
+								go();
+							}
+						}
+					} );
+				},
+				running;
+				
 			ruleInternal = rulesInternals[ id ] = [];
 			rules[ id ] = function ( callback ) {
-				return execute( ruleInternal , callback );
+				if ( isFunction(callback) ) {
+					list.push( callback );
+				}
+				if ( ! running ) {
+					running = TRUE;
+					go();
+				}
+				return true;
 			};
 		}
 		
@@ -28,6 +49,9 @@ dominoes.rule = function( id ) {
 			// Add in
 			ruleInternal.push( list );
 		}
+		
+		// Free list for re-use
+		list = [];
 		
 	} else if ( length ) {
 		
