@@ -47,19 +47,19 @@ function normalizeSequence( inputSequence , optional ) {
 		
 		if ( sub ) {
 			
-			if ( sub.sequence.length ) {
+			if ( sub.seq.length ) {
 				
-				if ( ( ! sub.blocking )
-					&& ( sub.optional ? optional : TRUE ) ) {
+				if ( ( ! sub.blk )
+					&& ( sub.opt ? optional : TRUE ) ) {
 					
-					sub.sequence.push( previousItem = sub.sequence.pop() );
-					outputSequence.push.apply( outputSequence , sub.sequence );
+					sub.seq.push( previousItem = sub.seq.pop() );
+					outputSequence.push.apply( outputSequence , sub.seq );
 					
 				} else {
 				
-					sub.sequence.push( !!sub.optional );
-					outputSequence.push( previousItem = sub.sequence );
-					lastSub = ( sub.optional ? optional : TRUE) ? sub : undefined;
+					sub.seq.push( !!sub.opt );
+					outputSequence.push( previousItem = sub.seq );
+					lastSub = ( sub.opt ? optional : TRUE) ? sub : undefined;
 			
 				}
 				
@@ -104,23 +104,23 @@ function normalizeSequence( inputSequence , optional ) {
 	
 	if ( outputSequence.length == 1 && lastSub ) {
 		
-		lastSub.sequence.pop();
+		lastSub.seq.pop();
 		return lastSub;
 		
 	}
 	
-	if ( lastSub && outputSequence[ outputSequence.length - 1 ] === lastSub.sequence ) {
+	if ( lastSub && outputSequence[ outputSequence.length - 1 ] === lastSub.seq ) {
 		
 		outputSequence.pop();
-		lastSub.sequence.pop();
-		outputSequence.push.apply( outputSequence , lastSub.sequence );
+		lastSub.seq.pop();
+		outputSequence.push.apply( outputSequence , lastSub.seq );
 		
 	}
 	
 	return {
-		sequence: outputSequence,
-		optional: optional,
-		blocking: waitCount + readyCount
+		seq: outputSequence,
+		opt: optional,
+		blk: waitCount + readyCount
 	};
 }
 
@@ -207,7 +207,7 @@ function parseList( list , context , sequential ) {
 	// For top level
 	if ( topLevel && sequence.length ) {
 		// We handle subExpressions
-		sequence = ( normalizeSequence( sequence ) ).sequence;
+		sequence = ( normalizeSequence( sequence ) ).seq;
 	}
 	
 	return sequence;
