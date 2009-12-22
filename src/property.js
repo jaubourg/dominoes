@@ -6,8 +6,20 @@ dominoes.property = function( id , value ) {
 	var length = arguments.length;
 	
 	if ( length > 1 ) {
-
-		properties[ id ] = value;
+		
+		if ( value === false ) {
+			
+			try {
+				
+				delete properties[ id ];
+			
+			} catch( _ ) {}
+		
+		} else {
+			
+			properties[ id ] = value;
+		
+		}
 		
 	} else if ( length ) {
 		
