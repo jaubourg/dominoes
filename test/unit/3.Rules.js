@@ -222,7 +222,7 @@ test("Sequenced dependencies" , function() {
 	
 });
 
-test("Sequenced dependencies (all together" , function() {
+test("Sequenced dependencies (all together)" , function() {
 	
 	window.DOMINOES_UNIT_STRING = "";
 	
