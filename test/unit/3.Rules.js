@@ -13,13 +13,24 @@ test("Setting / retrieving", function() {
 	
 });
 
+test("Deleting" , function() {
+	
+	dominoes.rule( "toDelete" , "will be deleted" );
+	dominoes.rule( "toDelete" , false );
+	
+	strictEqual( dominoes.rule( "toDelete" ) , undefined , "Property has been deleted" );
+	
+});
+
 test("Empty list" , function() {
 	
-	dominoes.rule( "NAME" , "" );
+	dominoes.rule( "NAME1" , "" );
+	dominoes.rule( "NAME2" , "" );
 	
 	dominoes.rule();
 	
-	strictEqual( dominoes.rule("NAME") , undefined , "Rules were removed" );	
+	strictEqual( dominoes.rule("NAME1") , undefined , "Rule 1 was removed" );	
+	strictEqual( dominoes.rule("NAME2") , undefined , "Rule 2 was removed" );	
 	
 });
 
@@ -136,6 +147,8 @@ test("On-the-fly multiple definition" , function() {
 
 test("Recursive definitions" , function() {
 	
+	expect( 1 );
+	
 	stop();
 	
 	var flag = false;
@@ -160,6 +173,8 @@ test("Recursive definitions" , function() {
 
 test("Async URL rule" , function() {
 	
+	expect( 1 );
+	
 	window.DOMINOES_UNIT_STRING = "";
 	
 	stop();
@@ -177,6 +192,8 @@ test("Async URL rule" , function() {
 });
 
 test("Async function rule" , function() {
+	
+	expect( 1 );
 	
 	window.DOMINOES_UNIT_STRING = "";
 	
@@ -202,6 +219,8 @@ test("Async function rule" , function() {
 
 test("Not called twice" , function() {
 	
+	expect( 1 );
+	
 	var string = "";
 	
 	dominoes.rule("DONE" , function() {
@@ -215,6 +234,8 @@ test("Not called twice" , function() {
 });
 
 test("Sequenced dependencies" , function() {
+	
+	expect( 1 );
 	
 	window.DOMINOES_UNIT_STRING = "";
 	
@@ -237,6 +258,8 @@ test("Sequenced dependencies" , function() {
 });
 
 test("Sequenced dependencies (all together)" , function() {
+	
+	expect( 1 );
 	
 	window.DOMINOES_UNIT_STRING = "";
 	
