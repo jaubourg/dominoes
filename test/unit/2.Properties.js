@@ -13,13 +13,24 @@ test("Setting / retrieving", function() {
 	
 });
 
+test("Deleting" , function() {
+	
+	dominoes.property( "toDelete" , "will be deleted" );
+	dominoes.property( "toDelete" , false );
+	
+	strictEqual( dominoes.property( "toDelete" ) , undefined , "Property has been deleted" );
+	
+});
+
 test("Empty list" , function() {
 	
-	dominoes.property( "NAME" , "VALUE" );
+	dominoes.property( "NAME1" , "VALUE1" );
+	dominoes.property( "NAME2" , "VALUE2" );
 	
 	dominoes.property();
 	
-	strictEqual( dominoes.property("NAME") , undefined , "Properties were removed" );	
+	strictEqual( dominoes.property("NAME1") , undefined , "Property 1 was removed" );	
+	strictEqual( dominoes.property("NAME2") , undefined , "Property 2 was removed" );	
 	
 });
 
