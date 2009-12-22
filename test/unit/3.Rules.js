@@ -158,7 +158,7 @@ test("Recursive definitions" , function() {
 	
 });
 
-test("URL rule" , function() {
+test("Async URL rule" , function() {
 	
 	window.DOMINOES_UNIT_STRING = "";
 	
@@ -176,7 +176,7 @@ test("URL rule" , function() {
 	
 });
 
-test("Function rule" , function() {
+test("Async function rule" , function() {
 	
 	window.DOMINOES_UNIT_STRING = "";
 	
@@ -196,6 +196,20 @@ test("Function rule" , function() {
 		dominoes.rule();
 		start();
 		
+	});
+	
+});
+
+test("Not called twice" , function() {
+	
+	var string = "";
+	
+	dominoes.rule("DONE" , function() {
+		string += "DONE";
+	});
+	
+	dominoes( "DONE DONE" , function() {
+		strictEqual( string , "DONE" , "Rule was executed only once" );
 	});
 	
 });
