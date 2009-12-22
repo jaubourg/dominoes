@@ -18,6 +18,8 @@ function ready( func ) {
 	}
 }
 
+// Mainly borrowed from jQuery
+// (c)2009 John Resig
 function bindReady() {
 		
 	// Will be only called once
