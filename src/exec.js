@@ -54,7 +54,7 @@ function executeItem( item , callback ) {
 				return TRUE;
 			}
 			loading[ url ] = [ callback ];
-			
+
 		} else {
 			
 			item.url += ( /\?/.test( url ) ? "&" : "?" ) + "_=" + ( new Date() ).getTime();
@@ -106,7 +106,6 @@ function execute( sequence , callback ) {
 				return function( callback ) {
 					
 					if ( optional ) {
-						
 						callback();
 						later ( function() {
 							execute( sub );
@@ -125,24 +124,21 @@ function execute( sequence , callback ) {
 		
 		num = todo.length;
 		
-		done = sequence.length || callback
-		?
-			function () {
-				if ( ! --num ) {
-					if ( item === s_ready ) {
-						ready( execute , sequence , callback );
-					} else {
-						execute( sequence , callback );
-					}
+		done = function () {
+			if ( ! --num ) {
+				if ( item === s_ready ) {
+					ready( execute , sequence , callback );
+				} else {
+					execute( sequence , callback );
 				}
 			}
-		:
-			noOp;
+		};
 
 		if ( num ) {
             
-			for ( i = 0 , length = todo.length ; i < length ; i++ ) {
-				if ( executeItem( todo[ i ] , done ) !== TRUE ) {
+			while ( todo.length ) {
+
+				if ( executeItem( todo.shift() , done ) !== TRUE ) {
 					done();
 				}
 			}
