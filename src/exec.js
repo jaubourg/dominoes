@@ -38,6 +38,15 @@ function executeItem( item , callback ) {
 			return;
 		}
 		
+		// Apply plugin
+		item = pluginFilter( item );
+		
+		// If we don't have an url anymore,
+		// then it's no longer a script request
+		if ( ! item.url ) {
+			return executeItem( item );
+		}
+		
 		// We reference values & eval the url
 		// for substitutions in the process
 		var url = item.url = eval( item.url ),
