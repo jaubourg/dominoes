@@ -1,8 +1,7 @@
 /* Most of the code here has been taken from jQuery
- * (c) John Resig
+ * (c)2009 John Resig
  * http://jquery.com/
  */
-
 var	// Regexp
 	rspaces = /\s+/,
 	

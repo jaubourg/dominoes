@@ -1,3 +1,7 @@
+/* Most of the code here has been taken from jQuery
+ * (c)2009 John Resig
+ * http://jquery.com/
+ */
 var readyCallbacks = [];
 
 function ready( func ) {
@@ -18,8 +22,6 @@ function ready( func ) {
 	}
 }
 
-// Mainly borrowed from jQuery
-// (c)2009 John Resig
 function bindReady() {
 		
 	// Will be only called once
