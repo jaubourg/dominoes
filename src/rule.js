@@ -8,9 +8,9 @@ dominoes.rule = function( id ) {
 	
 	if ( length > 1 ) {
 		
-		var list = parseList( slice.call( arguments , 1 ) , {} , TRUE ),
+		var list = parseList( slice.call( arguments , 1 ) ),
 			ruleInternal = rulesInternals[ id ];
-	
+			
 		// Create entry no matter what
 		if ( ! ruleInternal ) {
 			ruleInternal = rulesInternals[ id ] = [];
@@ -24,7 +24,7 @@ dominoes.rule = function( id ) {
 	
 			// Note as non optional
 			list.push( FALSE );
-	
+			
 			// Add in
 			ruleInternal.push( list );
 		}
