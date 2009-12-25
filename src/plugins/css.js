@@ -156,7 +156,7 @@ var	// Next css id
 
 			link: link,
 			
-			callbacks: function( stylesheet ) {
+			callback: function( stylesheet ) {
 				delete cssObjects[title];
 				if ( ! --cssPollingNb ) {
 					clearInterval( cssTimerId );
