@@ -29,7 +29,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 	sort( $list );
 	foreach ( $list as $file ) {
 ?>
-	<script type="text/javascript" src="./unit/<?= $file ?>"></script>
+	<script type="text/javascript" src="./unit/<?php echo $file ?>"></script>
 <?php
 	}
 ?>

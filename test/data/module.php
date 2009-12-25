@@ -10,7 +10,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
 
 
-if ( isset ( $_REQUEST[ "load" ] ) ) { ?>window.DOMINOES_UNIT_STRING += "L<?= $number ?>";<?php } ?>
-dominoes.rule( "module<?= $number ?>.start" , function() {
-	window.DOMINOES_UNIT_STRING += "S<?= $number ?>";
+if ( isset ( $_REQUEST[ "load" ] ) ) { ?>window.DOMINOES_UNIT_STRING += "L<?php echo $number ?>";<?php } ?>
+dominoes.rule( "module<?php echo $number ?>.start" , function() {
+	window.DOMINOES_UNIT_STRING += "S<?php echo $number ?>";
 } );
