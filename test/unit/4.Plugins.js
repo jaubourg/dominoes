@@ -27,7 +27,7 @@ test("Empty list" , function() {
 	dominoes.plugin( "NAME1" , noOp );
 	dominoes.plugin( "NAME2" , noOp );
 	
-	dominoes.plugin();
+	dominoes.plugin( false );
 	
 	strictEqual( dominoes.plugin( "NAME1" ) , undefined , "Plugin 1 has been deleted" );
 	strictEqual( dominoes.plugin( "NAME2" ) , undefined , "Plugin 2 has been deleted" );
@@ -37,6 +37,8 @@ test("Empty list" , function() {
 test("Called" , function() {
 	
 	expect( 1 );
+	
+	stop();
 	
 	var called;
 	
@@ -51,7 +53,8 @@ test("Called" , function() {
 	dominoes( "$test{TEST}" , function() {
 		
 		strictEqual( called , true , "Plugin was called" );
-		dominoes.plugin();
+		dominoes.plugin( false );
+		start();
 		
 	});
 	
@@ -60,6 +63,8 @@ test("Called" , function() {
 test("Options passed" , function() {
 	
 	expect( 1 );
+	
+	stop();
 	
 	var url;
 	
@@ -74,7 +79,8 @@ test("Options passed" , function() {
 	dominoes( "$test{TEST}" , function() {
 		
 		strictEqual( url , "TEST" , "Option object was passed" );
-		dominoes.plugin();
+		dominoes.plugin( false );
+		start();
 		
 	});
 	
@@ -99,7 +105,7 @@ test("Filter options" , function() {
 	dominoes( "$concat{MY_VALUE}" , function() {
 		
 		strictEqual( window.DOMINOES_UNIT_STRING , "MY_VALUE" , "Options were filtered" );
-		dominoes.plugin();
+		dominoes.plugin( false );
 		start();
 		
 	});
@@ -109,6 +115,8 @@ test("Filter options" , function() {
 test("Replace by function" , function() {
 	
 	expect( 1 );
+	
+	stop();
 	
 	var string;
 	
@@ -123,7 +131,8 @@ test("Replace by function" , function() {
 	dominoes( "$test{TEST_VALUE}" , function() {
 		
 		strictEqual( string , "TEST_VALUE" , "Function was called" );
-		dominoes.plugin();
+		dominoes.plugin( false );
+		start();
 		
 	});
 	
@@ -133,9 +142,12 @@ test("Ignore non-existing" , function() {
 	
 	expect( 1 );
 	
+	stop();
+	
 	dominoes( "$non_existing{THIS_URL_WOULD_FAIL}" , function() {
 		
 		ok( true , "The action completed" );
+		start();
 		
 	});
 	
@@ -144,6 +156,8 @@ test("Ignore non-existing" , function() {
 test("Recursive" , function() {
 	
 	expect( 3 );
+	
+	stop();
 	
 	dominoes.plugin( "outside" , function( options ) {
 		
@@ -166,7 +180,8 @@ test("Recursive" , function() {
 	dominoes( "$outside{$inside{SAMPLE}}" , function() {
 		
 		ok( true , "Completed" );
-		dominoes.plugin();
+		dominoes.plugin( false );
+		start();
 		
 	});
 	

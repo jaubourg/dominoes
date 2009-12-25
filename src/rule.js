@@ -8,14 +8,14 @@ dominoes.rule = function( id , del ) {
 	
 	if ( length > 1 ) {
 		
-		if ( del === false ) {
+		if ( del === FALSE ) {
 			
-			try {
+			if ( rules[ id ] ) {
 				
 				delete rules[ id ];
 				delete rulesInternals[ id ];
 			
-			} catch( _ ) {}
+			}
 			
 		} else {
 		
@@ -66,14 +66,15 @@ dominoes.rule = function( id , del ) {
 			
 		}
 		
+	} else if ( id === FALSE ) {
+		
+		rules = {};
+		rulesInternals = {};
+
 	} else if ( length ) {
 		
 		return rules[ id ];
 
-	} else {
-
-		rules = {};
-		rulesInternals = {};
 	}
 	
 	return this;

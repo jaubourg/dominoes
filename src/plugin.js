@@ -1,40 +1,39 @@
 var // List of plugins
 	plugins = {};
 	
-dominoes.plugin = function( name , functor ) {
+dominoes.plugin = function( id , functor ) {
 	
 	var length = arguments.length;
 	
 	if ( length > 1 ) {
 		
-		if ( functor === false ) {
+		if ( functor === FALSE ) {
 			
-			try {
+			if ( plugins[ id ] ) {
 				
-				delete plugins[ name ];
+				delete plugins[ id ];
 			
-			} catch( _ ) {}
+			}
 		
 		} else if ( isFunction( functor ) ) {
 			
-			plugins[ name ] = functor;
+			plugins[ id ] = functor;
 			
 		}
 		
-	} else if ( length ) {
-		
-		return plugins[ name ];
-		
-	} else {
+	} else if ( id === FALSE ) {
 		
 		plugins = {};
+		
+	} else if ( length ) {
+		
+		return plugins[ id ];
 		
 	}
 	
 	return this;
 	
 };
-
 
 function pluginFilter( options ) {
 	

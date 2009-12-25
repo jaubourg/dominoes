@@ -27,7 +27,7 @@ test("Empty list" , function() {
 	dominoes.rule( "NAME1" , "" );
 	dominoes.rule( "NAME2" , "" );
 	
-	dominoes.rule();
+	dominoes.rule( false );
 	
 	strictEqual( dominoes.rule("NAME1") , undefined , "Rule 1 was removed" );	
 	strictEqual( dominoes.rule("NAME2") , undefined , "Rule 2 was removed" );	
@@ -55,7 +55,7 @@ test("Expansion" , function() {
 	} , "myFunction" , function() {
 		
 		strictEqual( string, "myFunction was called" , "Rules are only executed once" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
 		
 	});
@@ -81,8 +81,9 @@ test("On-the-fly definition" , function() {
 	} , "myFunction" , function() {
 
 		strictEqual( string, "myFunction was called" , "Rules can be created on-the-fly" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
+		
 	});
 	
 });
@@ -110,8 +111,9 @@ test("Multiple definition" , function() {
 	dominoes( "myFunction" , function() {
 
 		strictEqual( string, "rule 1, rule 2" , "Rules accept multiple definitions" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
+		
 	});
 	
 });
@@ -139,8 +141,9 @@ test("On-the-fly multiple definition" , function() {
 	dominoes( "myFunction" , function() {
 
 		strictEqual( string, "rule 1, rule 2" , "Rules accept multiple definitions" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
+		
 	});
 	
 });
@@ -164,7 +167,7 @@ test("Recursive definitions" , function() {
 	dominoes( "firstLevel" , function() {
 		
 		ok( flag , "Recursive definition was expanded" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
 		
 	} );
@@ -175,16 +178,16 @@ test("Async URL rule" , function() {
 	
 	expect( 1 );
 	
-	window.DOMINOES_UNIT_STRING = "";
-	
 	stop();
+	
+	window.DOMINOES_UNIT_STRING = "";
 	
 	dominoes.rule( "url" , url("./data/concat.php?wait=200&str=a") );
 	
 	dominoes( "url" , function() {
 		
 		strictEqual( window.DOMINOES_UNIT_STRING , "a" , "Script was blocking" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
 		
 	});
@@ -195,9 +198,9 @@ test("Async function rule" , function() {
 	
 	expect( 1 );
 	
-	window.DOMINOES_UNIT_STRING = "";
-	
 	stop();
+	
+	window.DOMINOES_UNIT_STRING = "";
 	
 	dominoes.rule( "function" , function( callback ) {
 		setTimeout( function() {
@@ -210,7 +213,7 @@ test("Async function rule" , function() {
 	dominoes( "function" , function() {
 		
 		strictEqual( window.DOMINOES_UNIT_STRING , "a" , "Script was blocking" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
 		
 	});
@@ -221,6 +224,8 @@ test("Not called twice" , function() {
 	
 	expect( 1 );
 	
+	stop();
+	
 	var string = "";
 	
 	dominoes.rule("DONE" , function() {
@@ -228,7 +233,11 @@ test("Not called twice" , function() {
 	});
 	
 	dominoes( "DONE DONE" , function() {
+		
 		strictEqual( string , "DONE" , "Rule was executed only once" );
+		dominoes.rule( false );
+		start();
+		
 	});
 	
 });
@@ -237,9 +246,9 @@ test("Sequenced dependencies" , function() {
 	
 	expect( 1 );
 	
-	window.DOMINOES_UNIT_STRING = "";
-	
 	stop();
+	
+	window.DOMINOES_UNIT_STRING = "";
 	
 	dominoes.rule( "module1.load" , url("./data/module.php?number=1&load=") );
 	dominoes.rule( "module2.load" , url("./data/module.php?number=2&load=") );
@@ -250,9 +259,11 @@ test("Sequenced dependencies" , function() {
 	dominoes.rule( "module3" , "module3.load module2 > module3.start" );
 	
 	dominoes( "module3" , function() {
+		
 		strictEqual( window.DOMINOES_UNIT_STRING , "L3L2L1S1S2S3" , "Script cascading dependencies handled properly" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
+	
 	});
 	
 });
@@ -261,9 +272,9 @@ test("Sequenced dependencies (all together)" , function() {
 	
 	expect( 1 );
 	
-	window.DOMINOES_UNIT_STRING = "";
-	
 	stop();
+	
+	window.DOMINOES_UNIT_STRING = "";
 	
 	dominoes.rule( "module1.load" , url("./data/module.php?number=1") );
 	dominoes.rule( "module2.load" , url("./data/module.php?number=2") );
@@ -274,9 +285,11 @@ test("Sequenced dependencies (all together)" , function() {
 	dominoes.rule( "module3" , "module3.load module2 > module3.start" );
 	
 	dominoes( "module1 module2 module3" , function() {
+		
 		strictEqual( window.DOMINOES_UNIT_STRING , "S1S2S3" , "Script cascading dependencies handled properly" );
-		dominoes.rule();
+		dominoes.rule( false );
 		start();
+	
 	});
 	
 });

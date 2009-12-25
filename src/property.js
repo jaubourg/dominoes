@@ -7,13 +7,13 @@ dominoes.property = function( id , value ) {
 	
 	if ( length > 1 ) {
 		
-		if ( value === false ) {
+		if ( value === FALSE ) {
 			
-			try {
+			if ( properties[ id ] ) {
 				
 				delete properties[ id ];
 			
-			} catch( _ ) {}
+			}
 		
 		} else {
 			
@@ -21,13 +21,14 @@ dominoes.property = function( id , value ) {
 		
 		}
 		
+	} else if ( id === FALSE ) {
+		
+		properties = {};
+		
 	} else if ( length ) {
 		
 		return properties[ id ];
 		
-	} else {
-		
-		properties = {};
 	}
 	
 	return this;
