@@ -33,33 +33,32 @@ function normalizeSequence( inputSequence , optional ) {
 
 		if ( isArray( item ) ) {
 			
-			sub = normalizeSequence ( item );
+			sub = normalizeSequence( item );
 		
 		} else if ( item === s_begin ) {
 
-			sub = normalizeSequence ( inputSequence );
+			sub = normalizeSequence( inputSequence );
 
 		} else if ( item === s_beginOpt ) {
 
-			sub = normalizeSequence ( inputSequence , TRUE );
+			sub = normalizeSequence( inputSequence , TRUE );
 		
 		}
 		
 		if ( sub ) {
 			
-			if ( sub.seq.length ) {
+			if ( sub.length ) {
 				
 				if ( ( ! sub.blk )
 					&& ( sub.opt ? optional : TRUE ) ) {
 					
-					sub.seq.push( previousItem = sub.seq.pop() );
-					outputSequence.push.apply( outputSequence , sub.seq );
+					outputSequence.push.apply( outputSequence , sub );
+					previousItem = sub[ sub.length - 1 ];
 					
 				} else {
 				
-					sub.seq.push( !!sub.opt );
-					outputSequence.push( previousItem = sub.seq );
-					lastSub = ( sub.opt ? optional : TRUE) ? sub : undefined;
+					outputSequence.push( previousItem = sub );
+					lastSub = ! sub.opt || optional ? sub : undefined;
 			
 				}
 				
@@ -103,25 +102,20 @@ function normalizeSequence( inputSequence , optional ) {
 	}
 	
 	if ( outputSequence.length == 1 && lastSub ) {
-		
-		lastSub.seq.pop();
 		return lastSub;
-		
 	}
 	
-	if ( lastSub && outputSequence[ outputSequence.length - 1 ] === lastSub.seq ) {
+	if ( lastSub && outputSequence[ outputSequence.length - 1 ] === lastSub ) {
 		
 		outputSequence.pop();
-		lastSub.seq.pop();
-		outputSequence.push.apply( outputSequence , lastSub.seq );
+		outputSequence.push.apply( outputSequence , lastSub );
 		
 	}
 	
-	return {
-		seq: outputSequence,
-		opt: optional,
-		blk: waitCount + readyCount
-	};
+	outputSequence.blk = waitCount + readyCount;
+	outputSequence.opt = optional;
+	
+	return outputSequence;
 }
 
 // Transforms a sequence string expression into a sequence
@@ -207,7 +201,7 @@ function parseList( list , context , sequential ) {
 	// For top level
 	if ( topLevel && sequence.length ) {
 		// We handle subExpressions
-		sequence = ( normalizeSequence( sequence ) ).seq;
+		sequence = normalizeSequence( sequence );
 	}
 	
 	return sequence;

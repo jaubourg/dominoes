@@ -110,7 +110,7 @@ function execute( sequence , callback ) {
 			todo.push( isArray( item ) ? ( function() {
 
 				var sub = item,
-					optional = sub.pop();
+					optional = sub.opt;
 				
 				return function( callback ) {
 					
