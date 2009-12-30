@@ -1,11 +1,8 @@
 var	// Regular expressions
 	R_DELIM = /\s+/,
 	R_REPLACE = /^(.*)\$([^\${}]*){([^\${}]*)}(.*)$/,
-	R_REPLACE_BEGIN = /^(.*)\$([^\${}]*){$/,
-	R_REPLACE_END = /^}(.*)$/,
-	
-	// Syntax error
-	STR_SYNTAX_ERROR = "DOMINOES: Syntax Error",
+	R_REPLACE_BEFORE = /^(.*)\$([^\${}]*){$/,
+	R_REPLACE_AFTER = /^}(.*)$/,
 	
 	// Symbols
 	SYMBOLS = {},
@@ -81,7 +78,7 @@ function parseChain( chain ) {
 					if ( stack.length ) {
 						current = stack.pop();
 					} else {
-						throw STR_SYNTAX_ERROR;
+						error( "syntax error" , "unexpected " + chain[i] );
 					}
 				}
 					
@@ -110,23 +107,35 @@ function parseStringItem( string , context , thread ) {
 	string.replace( R_REPLACE , function( _ , before , name , args , after ) { 
 		
 		while( parsed === undefined ) {
+			
 			current = name
 				? functors[ name ].call( context , args , thread )
 				: properties[ args.url ? args.url : args ];
+			
 			if ( isString( current ) ) {
+				
 				current = parse( current , context , thread );
+			
 			}
-			beforeParts = R_REPLACE_BEGIN.exec( before );
-			afterParts = R_REPLACE_END.exec( after );
+			
+			beforeParts = R_REPLACE_BEFORE.exec( before );
+			afterParts = R_REPLACE_AFTER.exec( after );
+			
 			if ( ! beforeParts && ! afterParts ) {
+				
 				parsed = [ before , current , after ];
+			
 			} else if ( beforeParts && afterParts ) {
+				
 				before = beforeParts[ 1 ];
 				name = beforeParts[ 2 ];
 				args = current;
 				after = afterParts[ 1 ];
+			
 			} else {
-				throw STR_SYNTAX_ERROR;
+				
+				error( "syntax error" , "in '" + before + "<EXPR>" + after + "'" );
+			
 			}
 		}
 	});
