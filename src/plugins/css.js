@@ -20,7 +20,7 @@ dominoes.plugin( "css" , function( options ) {
 		head.appendChild( link );
 		
 		// We handle the callback
-		return true;
+		return TRUE;
 	};
 	
 } );
@@ -90,6 +90,7 @@ var	// Next css id
 							if ( /NS_ERR/.test(e) ) {
 								
 								// Once loaded, a more specific NS_ERROR_DOM_SECURITY_ERR is thrown
+								// for cross-domain links
 								
 								if ( /SECURITY/.test(e) ) {
 
