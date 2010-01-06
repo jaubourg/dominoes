@@ -1,209 +1,189 @@
-var	// Symbols
-	symbolsArray = "0 > >| { } {{ }}".split( rspaces ),
-	symbols = {},
-	/** @const */ s_wait =		1,
-	/** @const */ s_ready =		2,
-	/** @const */ s_begin =		3,
-	/** @const */ s_end =		4,
-	/** @const */ s_beginOpt =	5,
-	/** @const */ s_endOpt =	6,
+var	// Regular expressions
+	R_DELIM = /\s+/,
+	R_REPLACE = /\$([^\${}]*){([^\${}]*)}/g,
+	R_TEMP = / \(\* ([0-9]+) \*\) /g,
+	R_TEMP_SOLO = /^ \(\* ([0-9]+) \*\) $/,
 	
-	// Misc
+	// Symbols
+	SYMBOLS = {},
+	/** @const */ SYM_WAIT =		1,
+	/** @const */ SYM_READY =		2,
+	/** @const */ SYM_BEGIN =		3,
+	/** @const */ SYM_END =			4,
+	/** @const */ SYM_BEGIN_OPT =	5,
+	/** @const */ SYM_END_OPT =		6,
+	
+	// Miscellaneous
+	symbolsArray = "0 > >| { } {{ }}".split( R_DELIM ),
 	i = symbolsArray.length;
 
-// Init symbols
-for (; --i ; symbols[ symbolsArray[ i ] ] = i );
+// Initialize symbols
+for (; --i ; SYMBOLS[ symbolsArray[ i ] ] = i );
 
-// Normalizes a sequence
-// - remove unnecessary sync symbols
-// - flatten sub-sequences where possible
-function normalizeSequence( inputSequence , optional ) {
-
-	var outputSequence = [],
-		sub,
-		lastSub,
-		readyCount = 0,
-		waitCount = 0,
-		previousItem,
+/**
+ * Parses a chain
+ * @param expression
+ * @return array
+ */
+function parseChain( chain ) {
+	
+	chain = chain.split( R_DELIM );
+	
+	var i = 0,
+		length = chain.length,
+		stack = [],
+		root = [],
+		current = root,
+		tmp,
 		item;
+	
+	current[ STR_PARALLEL ] = TRUE;
+	
+	for( ; i < length ; i++ ) {
 		
-	while ( inputSequence.length && ( item = inputSequence.shift() ) !== s_end && item !== s_endOpt ) {
+		if ( item = chain[ i ] ) {
 		
-		sub = undefined;
-
-		if ( isArray( item ) ) {
+			if ( SYMBOLS[ item ] ) {
 			
-			sub = normalizeSequence( item );
-		
-		} else if ( item === s_begin ) {
-
-			sub = normalizeSequence( inputSequence );
-
-		} else if ( item === s_beginOpt ) {
-
-			sub = normalizeSequence( inputSequence , TRUE );
-		
-		}
-		
-		if ( sub ) {
+				item = SYMBOLS[ item ];
 			
-			if ( sub.length ) {
-				
-				if ( ( ! sub.blk )
-					&& ( sub.opt ? optional : TRUE ) ) {
+				if ( item === SYM_WAIT || item === SYM_READY ) {
 					
-					outputSequence.push.apply( outputSequence , sub );
-					previousItem = sub[ sub.length - 1 ];
-					
-				} else {
-				
-					outputSequence.push( previousItem = sub );
-					lastSub = ! sub.opt || optional ? sub : undefined;
-			
-				}
-				
-			}
-			
-		} else {
-			
-			if ( item == s_wait ) {
-				
-				if ( previousItem === s_wait || previousItem === s_ready ) {
-					continue;
-				} else {
-					waitCount++;
-				}
-			
-			} else if ( item === s_ready ) {
-				
-				if ( previousItem === s_ready ) {
-					continue;
-				} else if ( previousItem === s_wait ) {
-					outputSequence.pop();
-					waitCount--;
-				}
-				 
-				readyCount++;
-			}
-			
-			outputSequence.push( previousItem = item );
-			
-		}
-	}
-	
-	if ( previousItem == s_wait ) {
-		outputSequence.pop();
-		waitCount--;
-	}
-	
-	if ( outputSequence.length == waitCount ) {
-		outputSequence = [];
-		waitCount = readyCount = 0;
-	}
-	
-	if ( outputSequence.length == 1 && lastSub ) {
-		return lastSub;
-	}
-	
-	if ( lastSub && outputSequence[ outputSequence.length - 1 ] === lastSub ) {
-		
-		outputSequence.pop();
-		outputSequence.push.apply( outputSequence , lastSub );
-		
-	}
-	
-	outputSequence.blk = waitCount + readyCount;
-	outputSequence.opt = optional;
-	
-	return outputSequence;
-}
-
-// Transforms a sequence string expression into a sequence
-function parseChain( chain , context ) {
-	
-	var list = [],
-		i,
-		length,
-		item;
-		
-	chain = chain.split( rspaces );
-	
-	for ( i = 0 , length = chain.length ; i < length ; i++ ) {
-		if ( item = chain[i] ) {
-			list.push( context[ item ] || item );
-		}
-	}
-
-	return parseList( list , context , FALSE );
-}
-
-// Parse a list of arguments into a sequence
-function parseList( list , context , sequential ) {
-	
-	var sequence = [],
-		topLevel = arguments.length === 1,
-		context = topLevel ? {} : context,
-		sequential = topLevel ? TRUE : sequential,
-		i,
-		length,
-		item,
-		symbol;
-	
-	for ( i = 0 , length = list.length ; i < length ; i++ ) {
-		
-		if ( item = list[ i ] ) {
-            
-			if ( isString( item ) ) {
-
-				symbol = symbols[ item ];
-
-				if ( ! symbol && rspaces.test( item ) ) {
-					
-					sequence.push( parseChain( item , context ) );
-				
-				} else {
-					
-					sequence.push( symbol || item );
-				
-				}
-				
-			} else if ( isString( item.chain ) ) {
-				
-				sequence.push ( parseChain( item.chain , item ) );
-				
-			} else if ( isArray( item ) ) {
-				
-				sequence.push ( parseList( item , context , TRUE ) );
-				
-			} else if ( isFunction( item ) ) {
-				
-				sequence.push((function() {
-					var method = item;
-					return function( callback ) {
-						return method.call( context , callback );
+					if ( item === SYM_READY ) {
+						current.push( ready );
 					}
-				})());
-				
+					
+					if ( current.length ) {
+						
+						tmp = current.splice( 0 , current.length );
+						tmp[ STR_PARALLEL ] = current[ STR_PARALLEL ]; 
+						current.push( tmp , [] );
+						current[ STR_PARALLEL ] = FALSE;
+						current = current[ 1 ];
+						current[ STR_PARALLEL ] = TRUE;
+						
+					}
+					
+				} else if ( item === SYM_BEGIN || item === SYM_BEGIN_OPT ) {
+					
+					tmp = [];
+					current.push( tmp );
+					stack.push( current );
+					current = tmp;
+					current[ STR_PARALLEL ] = TRUE;
+					current[ STR_OPTIONAL ] = item === SYM_BEGIN_OPT;
+					
+				} else if ( item === SYM_END || item === SYM_END_OPT ) {
+					
+					if ( stack.length ) {
+						current = stack.pop();
+					} else {
+						error( "syntax error" , "unexpected " + chain[i] );
+					}
+				}
+					
 			} else {
+			
+				current.push( item );
 				
-				sequence.push( item );
-				
-			}
-		
-			// We wanna add sync for sequential automagically
-			if ( sequential ) {
-				sequence.push( s_wait );
 			}
 		}
 		
 	}
-	
-	// For top level
-	if ( topLevel && sequence.length ) {
-		// We handle subExpressions
-		sequence = normalizeSequence( sequence );
+		
+	return root;
+}
+
+/**
+ * Parse a string item
+ */
+function parseStringItem( string , context , thread ) {
+
+	var done,
+		data = {},
+		id = 0,
+		tmp;
+		
+	function parseTemp( string ) {
+		
+		tmp = R_TEMP_SOLO.exec( string );
+		
+		return tmp ? data[ 1 * tmp[ 1 ] ] : string.replace( R_TEMP , function( _ , key ) {
+			
+			tmp = data[ 1 * key ];
+			if ( ! isString( tmp ) ) {
+				error( "type mismatch" , "string expected" );
+			}
+
+			return tmp;
+			
+		} );
+		
 	}
 	
-	return sequence;
+	while ( ! done ) {
+	
+		done = TRUE;
+		
+		string = string.replace( R_REPLACE , function( _ , name , args ) {
+			
+			done = FALSE;
+			
+			if ( name && ! functors[ name ] ) {
+				error( "unknown functor" , name );
+			}
+			
+			args = parseTemp( args );
+			
+			if ( isString( args ) ) {
+				args = parse ( args , context , thread );
+			}
+			
+			data[ ++ id ] = name ? functors[ name ].call( context , args , thread ) : properties[ args ];
+			
+			if ( isString ( data[ id ] ) ) {
+				data[ id ] = parseStringItem( data[ id ] , context , thread );
+			}
+			
+			return " (* " + id + " *) ";
+			
+		});
+	}
+	
+	return parseTemp( string );
+}
+
+/**
+ * Parse a string
+ * @param string
+ */
+function parse( string , context , thread ) {
+	
+	var parsed;
+	
+	if ( R_DELIM.test( string ) ) {
+		
+		parsed = parseChain( string );
+		
+	} else if ( parsed = context[ string ] || rules[ string ] ) {
+			
+		parsed = isString( parsed ) ? parse( parsed , context , thread ) : parsed;
+			
+	} else {
+		
+		parsed = parseStringItem( string , context , thread );
+			
+	}
+	
+	return parsed;
+}
+
+
+/**
+ * Parse a string
+ * @param string
+ */
+dominoes.eval = function( string ) {
+	return parseStringItem( string , {} , {} );
 }
 

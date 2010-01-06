@@ -47,7 +47,7 @@ test("Serial execution" , function() {
 				string += "first ";
 				callback();
 			}, 100);
-			return true;
+			return false;
 		},
 		
 		second: function() {
@@ -80,7 +80,7 @@ test("Parallel execution" , function() {
 				string += " first";
 				callback();
 			}, 100);
-			return true;
+			return false;
 		},
 		
 		second: function() {
@@ -113,7 +113,7 @@ test("Non blocking sub-expression" , function() {
 				string += " first";
 				callback();
 			}, 100);
-			return true;
+			return false;
 		},
 		
 		second: function() {
@@ -270,7 +270,7 @@ test("Function with callback handling", function() {
     			equal( ++i , 2 , "execution is still blocked");
     			callback();
     		}, 200);
-    		return true;
+    		return false;
     } , function() {
     		equal( ++i , 3 , "second function called after callback");
     		start();

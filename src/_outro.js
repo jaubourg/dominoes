@@ -1,5 +1,17 @@
 // ### EXPOSE ###
 
-return dominoes = window[ exportName ] = window[ exportName ] || dominoes;
+dominoes = window[ exportName ] = window[ exportName ] || dominoes;
 
-})( "dominoes" , window , document , true , false , null );
+}).apply(
+	window ,
+	"/A|cache|chain|charset|/O|/L|/P|url".split( "|" )
+);
+
+})(
+	"dominoes" ,
+	window ,
+	document ,
+	true ,
+	false ,
+	null
+);

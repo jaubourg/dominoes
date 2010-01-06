@@ -207,7 +207,7 @@ test("Async function rule" , function() {
 			window.DOMINOES_UNIT_STRING += "a";
 			callback();
 		} , 100);
-		return TRUE;
+		return false;
 	} );
 	
 	dominoes( "function" , function() {

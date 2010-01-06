@@ -1,5 +1,5 @@
 /* Most of the code here has been taken from jQuery
- * (c)2009 John Resig
+ * (c)2010 John Resig
  * http://jquery.com/
  */
 var readyCallbacks = [];
@@ -19,12 +19,14 @@ function ready( func ) {
 			func.apply( document , slice.call( arguments , 1 ) );
 		
 		}
+		
+		return FALSE;
 	}
 }
 
 function bindReady() {
 		
-	// Will be only called once
+	// Will be called only once
 	bindReady = noOp;
 
 	// To be called at the end

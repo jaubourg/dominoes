@@ -1,11 +1,8 @@
 /* Most of the code here has been taken from jQuery
- * (c)2009 John Resig
+ * (c)2010 John Resig
  * http://jquery.com/
  */
-var	// Regexp
-	rspaces = /\s+/,
-	
-	// Head node
+var	// Head node
 	head = document.getElementsByTagName("head")[0] || document.documentElement,
 
 	// References
@@ -28,18 +25,14 @@ function isString( object ) {
 	return typeof object === "string";
 }
 
-function later( func ) {
-	setTimeout( func , 1 );
-}
-
 function loadScript( options , callback ) {
 	
 	var script = document.createElement("script");
 	
-	script.src = options.url;
+	script.src = options[ STR_URL ];
 	
-	if ( options.charset ) {
-		script.charset = options.charset;
+	if ( options[ STR_CHARSET ] ) {
+		script[ STR_CHARSET ] = options[ STR_CHARSET ];
 	}
 
 	// Attach handlers for all browsers
@@ -56,7 +49,7 @@ function loadScript( options , callback ) {
 				head.removeChild( script );
 			}
 
-			callback();
+			callback && callback();
 		}
 	};
 	

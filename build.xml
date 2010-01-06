@@ -34,10 +34,10 @@
             <fileset file="src/main.js" />
             <fileset file="src/utils.js" />
             <fileset file="src/ready.js" />
-            <fileset file="src/property.js" />
-            <fileset file="src/rule.js" />
-            <fileset file="src/plugin.js" />
-            <fileset file="src/exec.js" />
+            <fileset file="src/properties.js" />
+            <fileset file="src/rules.js" />
+            <fileset file="src/functors.js" />
+            <fileset file="src/execute.js" />
             <fileset file="src/parse.js" />
             <fileset file="src/_outro.js" />
         </concat>

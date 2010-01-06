@@ -1,4 +1,4 @@
-dominoes.plugin( "css" , function( options ) {
+dominoes.functor( "css" , function( options ) {
 	
 	return function( callback ) {
 		

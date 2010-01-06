@@ -1,7 +1,7 @@
 /*
  * Dominoes JavaScript Library v.@VERSION
  *
- * Copyright 2009, Julian Aubourg
+ * Copyright 2010, Julian Aubourg
  * Dual licensed under the MIT and GPL Version 2 licenses
  *
  * Date: @DATE
@@ -14,4 +14,14 @@
 	FALSE ,
 	NULL ,
 	undefined ) {
+
+(function(
+	STR_ACTIONS,
+	STR_CACHE,
+	STR_CHAIN,
+	STR_CHARSET,
+	STR_OPTIONAL,
+	STR_PARALLEL,
+	STR_PARSED,
+	STR_URL ) {
 
