@@ -97,7 +97,7 @@ function bindReady() {
 					// http://javascript.nwbox.com/IEContentLoaded/
 					document.documentElement.doScroll("left");
 				} catch( error ) {
-					later( doScrollCheck );
+					setTimeout( doScrollCheck , 1 );
 					return;
 				}
 
