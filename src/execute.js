@@ -1,6 +1,4 @@
-var R_TRANS = /^(.*)\$([^\${}]*){([^\${}]*)}(.*)$/,
-	
-	loaded = {},
+var loaded = {},
 	loading = {};
 	
 /**
@@ -83,7 +81,7 @@ function execute( item , context , thread , callback ) {
 						while( loading[ url ].length ) {
 							( loading[ url ].shift() )();
 						}
-						loaded[ url ] = true;
+						loaded[ url ] = TRUE;
 						delete loading[ url ];
 					} );
 					
