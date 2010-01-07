@@ -10,7 +10,8 @@ var loaded = {},
  */
 function execute( item , context , thread , callback ) {
 	
-	var url;
+	var url,
+		length;
 	
 	if ( item ) {
 		
@@ -99,46 +100,42 @@ function execute( item , context , thread , callback ) {
 				callback && callback();
 			}
 		
-		} else if ( isArray( item ) ) {
+		} else if ( isArray( item ) && ( length = item.length ) ) {
 			
-			var length = item.length;
-			
-			if ( length ) {
-			
-				if ( item[ STR_PARALLEL ] ) {
-					
-					var i = 0,
-						num = length,
-						barrier = callback ? function() {
-							if ( ! --num ) {
-								callback();
-							}
-						} : undefined ;
-			
-					while ( i < length ) {
-						execute( item[ i++ ] , context , thread , barrier );
-					}
-					
-				} else {
+			if ( item[ STR_PARALLEL ] ) {
 				
-					( function iterate( i ) {
-						
-						if ( i < length ) {
-							execute( item[ i++ ] , context , thread , function() {
-								iterate( i );
-							} );
-						} else {
-							callback && callback();
+				var i = 0,
+					num = length,
+					barrier = callback ? function() {
+						if ( ! --num ) {
+							callback();
 						}
-						
-					} )( 0 );
-					
+					} : undefined ;
+		
+				while ( i < length ) {
+					execute( item[ i++ ] , context , thread , barrier );
 				}
 				
 			} else {
+			
+				( function iterate( i ) {
+					
+					if ( i < length ) {
+						execute( item[ i++ ] , context , thread , function() {
+							iterate( i );
+						} );
+					} else {
+						callback && callback();
+					}
+					
+				} )( 0 );
 				
-				callback && callback();
 			}
+			
+		} else {
+			
+			callback && callback();
+			
 		}
 		
 	} else {
