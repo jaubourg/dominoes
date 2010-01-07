@@ -1,4 +1,4 @@
-/* Most of the code here has been taken from jQuery
+/* Code based on jQuery
  * (c)2010 John Resig
  * http://jquery.com/
  */
@@ -46,15 +46,15 @@ function bindReady() {
 	}
 	
 	// Catch cases where the browser event has already occurred.
-	if ( document.readyState === "complete" ) {
+	if ( document.readyState === STR_COMPLETE ) {
 		return notify();
 	}
 	
 	// Mozilla, Opera and webkit nightlies currently support this event
 	if ( document.addEventListener ) {
 		// Use the handy event callback
-		document.addEventListener( "DOMContentLoaded" , function DOMContentLoaded() {
-			document.removeEventListener( "DOMContentLoaded" , DOMContentLoaded , FALSE );
+		document.addEventListener( STR_DOM_CONTENT_LOADED , function DOMContentLoaded() {
+			document.removeEventListener( STR_DOM_CONTENT_LOADED , DOMContentLoaded , FALSE );
 			notify();
 		}, FALSE );
 		
@@ -65,16 +65,16 @@ function bindReady() {
 	} else if ( document.attachEvent ) {
 		// ensure firing before onload,
 		// maybe late but safe also for iframes
-		document.attachEvent( "onreadystatechange" , function onreadystatechange() {
+		document.attachEvent( STR_ON_READY_STATE_CHANGE , function onreadystatechange() {
 			// Make sure body exists, at least, in case IE gets a little overzealous (jQuery #5443).
-			if ( document.readyState === "complete" ) {
-				document.detachEvent( "onreadystatechange" , onreadystatechange );
+			if ( document.readyState === STR_COMPLETE ) {
+				document.detachEvent( STR_ON_READY_STATE_CHANGE , onreadystatechange );
 				notify();
 			}
 		});
 		
 		// A fallback to window.onload, that will always work
-		window.attachEvent( "onload" , notify );
+		window.attachEvent( STR_ON_LOAD , notify );
 
 		// If IE and not a frame
 		// continually check to see if the document is ready

@@ -4,7 +4,7 @@ dominoes = window[ exportName ] = window[ exportName ] || dominoes;
 
 }).apply(
 	window ,
-	"/A|cache|chain|charset|/O|/L|/P|url".split( "|" )
+	"/A|cache|chain|charset|complete|DOMContentLoaded|onload|onreadystatechange|/O|/L|/P|url".split( "|" )
 );
 
 })(

@@ -1,4 +1,4 @@
-/* Most of the code here has been taken from jQuery
+/* Code based on jQuery
  * (c)2010 John Resig
  * http://jquery.com/
  */
@@ -27,7 +27,8 @@ function isString( object ) {
 
 function loadScript( options , callback ) {
 	
-	var script = document.createElement("script");
+	var script = document.createElement("script"),
+		readyState;
 	
 	script.src = options[ STR_URL ];
 	
@@ -36,14 +37,12 @@ function loadScript( options , callback ) {
 	}
 
 	// Attach handlers for all browsers
-	script.onload = script.onreadystatechange = function() {
+	script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = function() {
 		
-		var readyState = script.readyState;
-		
-		if ( ! readyState || readyState === "loaded" || readyState === "complete" ) {
+		if ( ! ( readyState  = script.readyState ) || readyState === "loaded" || readyState === STR_COMPLETE ) {
 
 			// Handle memory leak in IE
-			script.onload = script.onreadystatechange = NULL;
+			script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = NULL;
 			
 			if ( head && script.parentNode ) {
 				head.removeChild( script );
