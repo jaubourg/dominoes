@@ -1,8 +1,5 @@
 var	// Regular expressions
-	R_DELIM = /\s+/,
-	R_REPLACE = /\$([^\${}]*){([^\${}]*)}/g,
-	R_TEMP = / \(\* ([0-9]+) \*\) /g,
-	R_TEMP_SOLO = /^ \(\* ([0-9]+) \*\) $/,
+	/** @const */ R_DELIM = /\s+/,
 	
 	// Symbols
 	SYMBOLS = {},
@@ -78,7 +75,7 @@ function parseChain( chain ) {
 					if ( stack.length ) {
 						current = stack.pop();
 					} else {
-						error( "syntax error" , "unexpected " + chain[i] );
+						error( "unexpected symbol" , chain[i] );
 					}
 				}
 					
@@ -106,9 +103,9 @@ function parseStringItem( string , context , thread ) {
 		
 	function parseTemp( string ) {
 		
-		tmp = R_TEMP_SOLO.exec( string );
+		tmp = /^ \(\* ([0-9]+) \*\) $/.exec( string );
 		
-		return tmp ? data[ 1 * tmp[ 1 ] ] : string.replace( R_TEMP , function( _ , key ) {
+		return tmp ? data[ 1 * tmp[ 1 ] ] : string.replace( / \(\* ([0-9]+) \*\) /g , function( _ , key ) {
 			
 			tmp = data[ 1 * key ];
 			if ( ! isString( tmp ) ) {
@@ -125,7 +122,7 @@ function parseStringItem( string , context , thread ) {
 	
 		done = TRUE;
 		
-		string = string.replace( R_REPLACE , function( _ , name , args ) {
+		string = string.replace( /\$([^\${}]*){([^\${}]*)}/g , function( _ , name , args ) {
 			
 			done = FALSE;
 			
