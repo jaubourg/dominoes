@@ -1,4 +1,4 @@
-<project name="Dominoes" default="dominoes" basedir=".">
+<project name="Dominoes" default="all" basedir=".">
 
 	<tstamp>
 		<format property="date" pattern="M/d/y HH:mm:ss.SSS - z" locale="en,US"/>
@@ -8,7 +8,6 @@
     <property description="Folder for dominoes and min target" name="dist" value="./dist" />
 
     <property name="DOM" value="${dist}/dominoes.js" />
-    <property name="DOM_TEST" value="${dist}/dominoes.test.js" />
     <property name="DOM_MIN" value="${dist}/dominoes.min.js" />
 	
 	<available property="qunit" file="test/qunit" />
@@ -34,9 +33,10 @@
             <fileset file="src/main.js" />
             <fileset file="src/utils.js" />
             <fileset file="src/ready.js" />
-            <fileset file="src/properties.js" />
-            <fileset file="src/rules.js" />
-            <fileset file="src/functors.js" />
+            <fileset file="src/dataHolder.js" />
+            <fileset file="src/property.js" />
+            <fileset file="src/functor.js" />
+            <fileset file="src/rule.js" />
             <fileset file="src/execute.js" />
             <fileset file="src/parse.js" />
             <fileset file="src/_outro.js" />
@@ -44,27 +44,6 @@
     	<replaceregexp match="@VERSION" replace="${version}" file="${DOM}" />
 		<replaceregexp match="@DATE" replace="${date}" flags="g" byline="true" file="${DOM}" />
         <echo message="${DOM} built." />
-    </target>
-
-    <target name="test" depends="qunit-clone,qunit-pull" description="Test version of dominoes with additional inspecting features">
-        <echo message="Building ${DOM_TEST}" />
-        <mkdir dir="${dist}" />
-        <concat destfile="${DOM_TEST}">
-            <fileset file="src/_intro.js" />
-            <fileset file="src/main.js" />
-            <fileset file="src/utils.js" />
-            <fileset file="src/ready.js" />
-            <fileset file="src/property.js" />
-            <fileset file="src/rule.js" />
-            <fileset file="src/plugin.js" />
-            <fileset file="src/exec.js" />
-            <fileset file="src/parse.js" />
-            <fileset file="src/test.js" />
-            <fileset file="src/_outro.js" />
-        </concat>
-    	<replaceregexp match="@VERSION" replace="${version}" file="${DOM_TEST}" />
-		<replaceregexp match="@DATE" replace="${date}" flags="g" byline="true" file="${DOM_TEST}" />
-        <echo message="${DOM_TEST} built." />
     </target>
 
     <target name="min" depends="dominoes" description="Minification using Google's Closure Compiler, *very* good in combination with GZip">
@@ -96,10 +75,10 @@
         <echo message="${DOM_MIN} built." />
     </target>
 
-    <target name="all" depends="clean,dominoes,test,min" />
-    
     <target name="clean">
         <delete dir="${dist}" />
     </target>
 
+    <target name="all" depends="clean,min" />
+    
 </project>
