@@ -1,4 +1,4 @@
-module("Rules");
+module("Rule");
 
 test("Undefined", function() {
 	

@@ -34,6 +34,16 @@ test("Empty list" , function() {
 	
 });
 
+test("Only functions" , function() {
+	
+	dominoes.functor( "TEST" , "hello" );
+	
+	strictEqual( dominoes.functor( "TEST" ) , undefined , "Functor wasn't stored" );
+	
+	dominoes.functor( false );
+	
+});
+
 test("Called" , function() {
 	
 	expect( 1 );

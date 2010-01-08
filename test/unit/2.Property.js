@@ -1,4 +1,4 @@
-module("Properties");
+module("Property");
 
 test("Undefined", function() {
 	
@@ -34,24 +34,6 @@ test("Empty list" , function() {
 	
 });
 
-test("Eval" , function() {
-	
-	dominoes.property( "firstName" , "Julian" ).property( "lastName" , "Aubourg" );
-	
-	equal( dominoes.eval("${firstName} ${lastName}") , "Julian Aubourg" , "firstName lastName was properly evaled" );
-	
-});
-
-test("Eval (recursive)" , function() {
-	
-	dominoes.property( "firstName" , "Julian" )
-		.property( "lastName" , "Aubourg" )
-		.property( "name" , "${firstName} ${lastName}" );
-		
-	equal( dominoes.eval("${name}") , "Julian Aubourg" , "name was properly expanded as firstName lastName" );
-	
-});
-
 test("Expansion" , function() {
 
 	expect( 1 );
@@ -65,6 +47,28 @@ test("Expansion" , function() {
 	dominoes( url( "./data/concat.php?str=${string}" ) , function() {
 		
 		equal( window.DOMINOES_UNIT_STRING , "TEST_PROP_IN_URL" , "Property was properly expanded" );
+		dominoes.property( false );
+		start();
+		
+	});
+	
+});
+
+test("Expansion (recursive)" , function() {
+
+	expect( 1 );
+	
+	stop();
+	
+	window.DOMINOES_UNIT_STRING = "";
+	
+	dominoes.property( "tail" , "_IN_URL" );
+	dominoes.property( "string" , "TEST_PROP${tail}" );
+	
+	dominoes( url( "./data/concat.php?str=${string}" ) , function() {
+		
+		equal( window.DOMINOES_UNIT_STRING , "TEST_PROP_IN_URL" , "Properties were properly expanded" );
+		dominoes.property( false );
 		start();
 		
 	});
