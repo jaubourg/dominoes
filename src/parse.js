@@ -97,6 +97,7 @@ function parseChain( chain ) {
 function parseStringItem( string , context , thread ) {
 
 	var done,
+		func,
 		data = {},
 		id = 0,
 		tmp;
@@ -126,7 +127,7 @@ function parseStringItem( string , context , thread ) {
 			
 			done = FALSE;
 			
-			if ( name && ! functors[ name ] ) {
+			if ( name && ! ( func = functor( name ) ) ) {
 				error( "unknown functor" , name );
 			}
 			
@@ -136,10 +137,10 @@ function parseStringItem( string , context , thread ) {
 				args = parse ( args , context , thread );
 			}
 			
-			data[ ++ id ] = name ? functors[ name ].call( context , args , thread ) : properties[ args ];
+			data[ ++ id ] = name ? func.call( context , args , thread ) : property( args );
 			
-			if ( isString ( data[ id ] ) ) {
-				data[ id ] = parseStringItem( data[ id ] , context , thread );
+			if ( isString( data[ id ] ) ) {
+				data[ id ] = parse( data[ id ] , context , thread );
 			}
 			
 			return " (* " + id + " *) ";
@@ -162,7 +163,7 @@ function parse( string , context , thread ) {
 		
 		parsed = parseChain( string );
 		
-	} else if ( parsed = context[ string ] || rules[ string ] ) {
+	} else if ( parsed = context[ string ] || rule( string ) ) {
 			
 		parsed = isString( parsed ) ? parse( parsed , context , thread ) : parsed;
 			
@@ -173,14 +174,5 @@ function parse( string , context , thread ) {
 	}
 	
 	return parsed;
-}
-
-
-/**
- * Parse a string
- * @param string
- */
-dominoes.eval = function( string ) {
-	return parseStringItem( string , {} , {} );
 }
 
