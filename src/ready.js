@@ -27,7 +27,7 @@ function ready( func ) {
 function bindReady() {
 		
 	// Will be called only once
-	bindReady = noOp;
+	bindReady = noop;
 
 	// To be called at the end
 	function notify() {
