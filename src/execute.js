@@ -58,7 +58,7 @@ function execute( item , context , thread , callback ) {
 				
 				if ( item[ STR_CACHE ] === FALSE ) {
 				
-					loadScript( item , callback || noOp );
+					loadScript( item , callback || noop );
 					
 				} else if ( loaded[ url ] ) {
 					
@@ -96,7 +96,7 @@ function execute( item , context , thread , callback ) {
 			
 		} else if ( isFunction( item ) ) {
 			
-			if ( item.call( context , callback || noOp , thread ) !== FALSE ) {
+			if ( item.call( context , callback || noop , thread ) !== FALSE ) {
 				callback && callback();
 			}
 		
