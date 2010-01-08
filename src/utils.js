@@ -9,8 +9,8 @@ var	// Head node
 	toString = {}.toString,
 	slice = [].slice;
 	
-// NoOp
-function noOp() {}
+// noop
+function noop() {}
 
 // Utilities
 function isArray( object ) {
@@ -28,9 +28,11 @@ function isString( object ) {
 function loadScript( options , callback ) {
 	
 	var script = document.createElement("script"),
+		url = options[ STR_URL ],
 		readyState;
 	
-	script.src = options[ STR_URL ];
+	// Opera doesn't re-execute scripts with same url
+	script.src = url + ( options[ STR_CACHE ] === false ? ( ( /\?/.test( url ) ? "&" : "?" ) + "_=" + (new Date()).getTime() ) : "" );
 	
 	if ( options[ STR_CHARSET ] ) {
 		script[ STR_CHARSET ] = options[ STR_CHARSET ];
