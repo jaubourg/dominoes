@@ -6,13 +6,6 @@ test("Undefined", function() {
 	
 });
 
-test("Setting / retrieving", function() {
-	
-	strictEqual ( dominoes.functor( "test" , noOp ) , dominoes , "Setting a functor returns dominoes" );
-	strictEqual ( dominoes.functor( "test" ) , noOp , "The functor was properly stored" );
-	
-});
-
 test("Deleting" , function() {
 	
 	dominoes.functor( "toDelete" , noOp );
@@ -20,6 +13,39 @@ test("Deleting" , function() {
 	
 	strictEqual( dominoes.functor( "toDelete" ) , undefined , "Functor has been deleted" );
 	
+});
+
+test("Setting / retrieving", function() {
+	
+	strictEqual ( dominoes.functor( "test" , noOp ) , dominoes , "Setting a functor returns dominoes" );
+	strictEqual ( dominoes.functor( "test" ).T.F , noOp , "The functor was properly stored for Functions" );
+	strictEqual ( dominoes.functor( "test" ).T.S , noOp , "The functor was properly stored for Strings" );
+	strictEqual ( dominoes.functor( "test" ).T.O , noOp , "The functor was properly stored for Options" );
+
+	dominoes.functor( false );
+	
+});
+
+test("Setting / retrieving (typed)", function() {
+	
+	strictEqual ( dominoes.functor( "test{ F | S }" , noOp ) , dominoes , "Setting a functor returns dominoes" );
+	strictEqual ( dominoes.functor( "test" ).T.F , noOp , "The functor was properly stored for Functions" );
+	strictEqual ( dominoes.functor( "test" ).T.S , noOp , "The functor was properly stored for Strings" );
+	strictEqual ( dominoes.functor( "test" ).T.O , undefined , "The functor was not stored for Options" );
+	
+	dominoes.functor( false );
+
+});
+
+test("Setting / retrieving (typed with no value)", function() {
+	
+	strictEqual ( dominoes.functor( "test{  }" , noOp ) , dominoes , "Setting a functor returns dominoes" );
+	strictEqual ( dominoes.functor( "test" ).T.F , noOp , "The functor was properly stored for Functions" );
+	strictEqual ( dominoes.functor( "test" ).T.S , noOp , "The functor was properly stored for Strings" );
+	strictEqual ( dominoes.functor( "test" ).T.O , noOp , "The functor was properly stored for Options" );
+	
+	dominoes.functor( false );
+
 });
 
 test("Empty list" , function() {
@@ -177,3 +203,75 @@ test("Recursive" , function() {
 	});
 	
 });
+
+test("String gets passed as options" , function() {
+	
+	var test = "";
+	
+	dominoes.functor("test{O}", function( options ) {
+		test += options.url;
+		return noOp;
+	});
+	
+	stop();
+	
+	dominoes("$test{URL}" , function() {
+		strictEqual( test , "URL" , "String was changed to options" );
+		dominoes.functor( false );
+		start();
+	});
+	
+});
+
+test("String gets passed as function" , function() {
+	
+	expect( 2 );
+	
+	dominoes.functor("test{F}", function( functor ) {
+		ok( true , "String was transformed into a function" )
+		return functor;
+	});
+	
+	window.DOMINOES_UNIT_STRING = "";
+	
+	stop();
+	
+	dominoes( "$test{" + url( "./data/concat.php?str=A" ) + "}" , function() {	
+		strictEqual( window.DOMINOES_UNIT_STRING , "A" , "URL was fetched" );
+		dominoes.functor( false );
+		start();
+	});
+	
+});
+
+test("Selective given type" , function() {
+	
+	var test = "";
+	
+	dominoes.functor("test{S}", function( string ) {
+		test += string;
+		return {
+			url: "URL"
+		};
+	});
+
+	dominoes.functor("test{O}", function( options ) {
+		test += " " + options.url;
+		return noOp;
+	});
+	
+	dominoes.functor("test{F}", function( functor ) {
+		test += " " + ( functor === noOp );
+		return functor;
+	});
+	
+	stop();
+	
+	dominoes("$test{$test{$test{STRING}}}" , function() {
+		strictEqual( test , "STRING URL true" , "Filtering worked" );
+		dominoes.functor( false );
+		start();
+	});
+	
+});
+
