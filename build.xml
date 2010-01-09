@@ -62,15 +62,16 @@
 			<mapper type="glob" from="dominoes.js" to="tmpmin" />
 		</apply>
 		<concat destfile="${DOM_MIN}">
-			<filelist files="${DOM}, dist/tmpmin"/>
+			<filelist files="src/_intro_min.js, ${DOM}, dist/tmpmin"/>
 			<filterchain>
-				<headfilter lines="8"/>
+				<headfilter lines="1"/>
 			</filterchain>
 		</concat>
 		<concat destfile="${DOM_MIN}" append="yes">
 			<filelist files="dist/tmpmin"/>
 		</concat>
 		<delete file="dist/tmpmin"/>
+    	<replaceregexp match="@VERSION" replace="${version}" file="${DOM_MIN}" />
 		<gzip src="${DOM_MIN}" destfile="${DOM_MIN}.gz"/>
         <echo message="${DOM_MIN} built." />
     </target>

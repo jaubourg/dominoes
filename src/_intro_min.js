@@ -1,0 +1,1 @@
+// Dominoes v.@VERSION
