@@ -17,9 +17,13 @@ function dataHolder( create ) {
 				
 				}
 				
-			} else {
+			} else if (create) {
 				
 				create.apply( data , arguments );
+				
+			} else {
+				
+				data[ id ] = del;
 				
 			}
 				
