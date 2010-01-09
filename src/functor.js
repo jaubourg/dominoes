@@ -46,7 +46,7 @@ var functor = dominoes.functor = dataHolder( function( id , func ) {
 					
 				},
 				types = functor.T = functor.T || {},
-				typesString = parts[ 2 ] ? parts[ 2 ].replace( /^{\s*|\s*}$/g , "" ) : "";
+				typesString = parts[ 2 ] ? parts[ 2 ].replace( /^{\s*|\s*}$/g , "" ) : "",
 				tmp = ( typesString || "F|S|O" ).split( /\s*\|\s*/ ),
 				length = tmp.length,
 				i = 0;
