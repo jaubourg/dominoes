@@ -32,7 +32,7 @@ function loadScript( options , callback ) {
 		readyState;
 	
 	// Opera doesn't re-execute scripts with same url
-	script.src = url + ( options[ STR_CACHE ] === false ? ( ( /\?/.test( url ) ? "&" : "?" ) + "_=" + (new Date()).getTime() ) : "" );
+	script.src = url + ( options[ STR_CACHE ] === FALSE ? ( ( /\?/.test( url ) ? "&" : "?" ) + "_=" + (new Date()).getTime() ) : "" );
 	
 	if ( options[ STR_CHARSET ] ) {
 		script[ STR_CHARSET ] = options[ STR_CHARSET ];
