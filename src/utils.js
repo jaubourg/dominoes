@@ -3,7 +3,7 @@
  * http://jquery.com/
  */
 var	// Head node
-	head = document.getElementsByTagName("head")[0] || document.documentElement,
+	head = document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("head")[0] || document.documentElement,
 
 	// References
 	toString = {}.toString,

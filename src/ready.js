@@ -15,9 +15,9 @@ function ready( func ) {
 				
 				function listen() {
 					
-					if ( document.getElementsByTagName
+					if ( document[ STR_GET_ELEMENTS_BY_TAG_NAME ]
 						&& ( document.body
-							|| document.getElementsByTagName("body").length ) ) {
+							|| document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("body").length ) ) {
 						
 						while ( readyCallbacks.length ) {
 								args = readyCallbacks.shift();
