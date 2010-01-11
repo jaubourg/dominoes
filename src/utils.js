@@ -41,7 +41,7 @@ function loadScript( options , callback ) {
 	// Attach handlers for all browsers
 	script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = function() {
 		
-		if ( ! ( readyState  = script.readyState ) || readyState === "loaded" || readyState === STR_COMPLETE ) {
+		if ( ! ( readyState  = script.readyState ) || readyState === "loaded" || readyState === "complete" ) {
 
 			// Handle memory leak in IE
 			script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = NULL;
