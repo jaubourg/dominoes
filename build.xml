@@ -10,6 +10,8 @@
     <property name="DOM" value="${dist}/dominoes.js" />
     <property name="DOM_MIN" value="${dist}/dominoes.min.js" />
 	
+    <property name="CSS" value="${dist}/dominoes-css.js" />
+	
 	<available property="qunit" file="test/qunit" />
 	
 	<target name="qunit-clone" unless="qunit">
@@ -62,13 +64,8 @@
 			<mapper type="glob" from="dominoes.js" to="tmpmin" />
 		</apply>
 		<concat destfile="${DOM_MIN}">
-			<filelist files="src/_intro_min.js, ${DOM}, dist/tmpmin"/>
-			<filterchain>
-				<headfilter lines="1"/>
-			</filterchain>
-		</concat>
-		<concat destfile="${DOM_MIN}" append="yes">
-			<filelist files="dist/tmpmin"/>
+			<fileset file="src/_intro_min.js"/>
+			<fileset file="dist/tmpmin"/>
 		</concat>
 		<delete file="dist/tmpmin"/>
     	<replaceregexp match="@VERSION" replace="${version}" file="${DOM_MIN}" />
@@ -76,10 +73,20 @@
         <echo message="${DOM_MIN} built." />
     </target>
 
+    <target name="css" depends="dominoes" description="CSS plugin build">
+        <echo message="Building ${CSS}" />
+        <concat destfile="${CSS}">
+            <fileset file="src/plugins/css.js" />
+        </concat>
+    	<replaceregexp match="@VERSION" replace="${version}" file="${CSS}" />
+		<replaceregexp match="@DATE" replace="${date}" flags="g" byline="true" file="${CSS}" />
+        <echo message="${CSS} built." />
+    </target>
+
     <target name="clean">
         <delete dir="${dist}" />
     </target>
 
-    <target name="all" depends="clean,min" />
+    <target name="all" depends="clean,min,css" />
     
 </project>
