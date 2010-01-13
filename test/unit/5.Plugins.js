@@ -23,10 +23,10 @@ test( "Loading CSS" , function() {
 	pluginRules();
 	
 	dominoes("$cssTest{data/style.php?left=27&wait=1000}" , function() {
-		
-		strictEqual( $("<div class='dominoes' />").appendTo($("body")).css("marginLeft") , "27px" , "Margin left was set to 27px" );
+		var div = $("<div class='dominoes'/>").appendTo($("body"));
+		strictEqual( div.css("marginLeft") , "27px" , "Margin left was set to 27px" );
+		div.remove();
 		start();
-		
 		
 	})
 	
