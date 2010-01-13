@@ -34,6 +34,29 @@
 			// Add it to the doc
 			( document.getElementsByTagName("head")[0] || document.documentElement ).appendChild( link );
 			
+			// Opera safeguard:
+			// for same-domain stylesheets, we create a rule to control if the stylesheet has been properly loaded
+			try {
+				var stylesheets = document.styleSheets,
+					stylesheet,
+					title,
+					i = 0,
+					length = stylesheets.length;
+					
+				for ( ; i < length ; i++ ) {
+					
+					if ( stylesheet = stylesheets[ i ] ) {
+						
+						if ( ! stylesheet.insertRule ) break;
+						
+						if ( ( title = stylesheet.title ) == link.title ) {
+							stylesheet.insertRule(title+"{a:0}",0);
+							break;
+						}
+					}
+				}
+				
+			} catch(e) {}
 		}
 		
 		return function( callback ) {
@@ -93,11 +116,10 @@
 				i,
 				length,
 				readyState,
-				owner,
-				parts;
+				rules;
 				
 			if ( stylesheets ) { // Safeguard for IE
-	
+				
 				for ( i = 0, length = stylesheets.length; i < length; i++ ) {
 					
 					if ( ( stylesheet = stylesheets[i] ) // Safeguard for IE
@@ -106,8 +128,9 @@
 							
 						callback = object.callback;
 						link = object.link;
-	
-						// IE: links have a readyState property, use it
+						
+						// Internet Explorer:
+						//  * links have a readyState property, we use it
 						readyState = link.readyState;
 						if ( readyState !== undefined) {
 							
@@ -119,31 +142,32 @@
 							
 							try {
 								
-								owner = 1;
+								rules = stylesheet.cssRules;
 								
-								stylesheet.cssRules;
-								
-								// Webkit: stylesheet object is not created before the link has been loaded
+								// Webkit:
+								// Stylesheet object is not created before the link has been loaded
 								//  * same-domain: cssRules is returned (no exception thrown)
 								//  * cross-domain: cssRules is empty (no exception thrown)
 								
-								// Gecko, Opera: an exception is thrown if the stylesheet hasn't been loaded
+								// Gecko:
+								// An exception is thrown if the stylesheet hasn't been loaded
 								//  * same-domain: if loaded, cssRules is returned, else exception
 								//  * cross-domain: always throws an exception
 								
-								owner = 0;
+								// Opera:
+								//  * same-domain: loaded or not, cssRules is returned
+								//  * cross-domain: always throws an exception
+								
+								// Opera safeguard
+								if ( rules.length === 1 && rules[0].selectorText == title ) {
+									continue;
+								}
 								
 								callback( stylesheet );
 								
 							} catch(e) {
 								
-								// Callback threw the exception
-								if ( ! owner ) {
-									throw e;
-								}
-								
 								// Gecko: the engine throws NS_ERROR_DOM_* exceptions
-								
 								if ( /NS_ERR/.test(e) ) {
 									
 									// Once loaded, a more specific NS_ERROR_DOM_SECURITY_ERR is thrown
@@ -155,31 +179,20 @@
 									
 									}
 								
+								// Opera (cross-domain)
 								} else {
 									
-									// Opera
-									
-									// Determine if the request is cross domain
-									if ( object.x === undefined ) {
-										// Some jQuery pillage
-										parts = /^(\w+:)?\/\/([^\/?#]+)/.exec( link.href );
-										object.x = !!( parts && ( parts[ 1 ] && parts[ 1 ] != location.protocol || parts[ 2 ] != location.host ) );
-									}
-									
-									// If cross domain
-									if ( object.x ) {
-										try {
-	
-											stylesheet.deleteRule( 0 );
-											
-											// If the link hasn't been loaded yet, deleteRule is ignored by Opera
-											// but once loaded, it throws a security exception
-											
-										} catch(_) { 
-											
-											callback( stylesheet );
-											
-										}
+									try {
+
+										stylesheet.deleteRule( 0 );
+										
+										// If the link hasn't been loaded yet, deleteRule is ignored by Opera
+										// but once loaded, it throws an exception
+										
+									} catch(_) { 
+										
+										callback( stylesheet );
+										
 									}
 								}
 							}
@@ -208,7 +221,7 @@
 					if ( finalTitle ) {
 						link.title = stylesheet.title = finalTitle;
 					}
-					callback();
+					dominoes.later( callback );
 				}	
 			};
 			
