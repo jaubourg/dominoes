@@ -1,7 +1,3 @@
-/* Code based on jQuery
- * (c)2010 John Resig
- * http://jquery.com/
- */
 var	// Head node
 	head = document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("head")[0] || document.documentElement,
 
@@ -11,6 +7,17 @@ var	// Head node
 	
 // noop
 function noop() {}
+
+// Defer execution
+function later( func , self ) {
+	var args = slice.call( arguments , 2 )
+	setTimeout( function() {
+		func.apply( self || window , args );
+	} , 0 );
+	return this;
+}
+
+dominoes.later = later;
 
 // Utilities
 function isArray( object ) {
@@ -25,6 +32,10 @@ function isString( object ) {
 	return typeof object === "string";
 }
 
+/* Code based on jQuery
+ * (c)2010 John Resig
+ * http://jquery.com/
+ */
 function loadScript( options , callback ) {
 	
 	var script = document.createElement("script"),
@@ -50,7 +61,10 @@ function loadScript( options , callback ) {
 				head.removeChild( script );
 			}
 
-			callback && callback();
+			if ( callback ) {
+				// Give time for execution (thank you so much, Opera devs!)
+				later( callback );
+			}
 		}
 	};
 	
