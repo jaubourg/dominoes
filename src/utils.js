@@ -42,13 +42,16 @@ function loadScript( options , callback ) {
 		url = options[ STR_URL ],
 		readyState;
 	
-	// Opera doesn't re-execute scripts with same url
-	script.src = url + ( options[ STR_CACHE ] === FALSE ? ( ( /\?/.test( url ) ? "&" : "?" ) + "_=" + (new Date()).getTime() ) : "" );
+	// HTML5: say it's async
+	script.async = "async";
 	
 	if ( options[ STR_CHARSET ] ) {
 		script[ STR_CHARSET ] = options[ STR_CHARSET ];
 	}
 
+	// Opera doesn't re-execute scripts with same url
+	script.src = url + ( options[ STR_CACHE ] === FALSE ? ( ( /\?/.test( url ) ? "&" : "?" ) + "_=" + (new Date()).getTime() ) : "" );
+	
 	// Attach handlers for all browsers
 	script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = function() {
 		
