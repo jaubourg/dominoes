@@ -17,11 +17,13 @@
 		
 		function load( url , callback ) {
 			
-			var link = document.createElement("link");
-				charset = options.charset;
+			var link = document.createElement("link"),
+				charset = options.charset,
+				title = options.title;
 	
-			link.rel = "Stylesheet";
+			link.rel = "stylesheet";
 			link.type = "text/css";
+			link.media = options.media || "screen";
 			link.href = url;
 				
 			if ( charset ) {
@@ -29,41 +31,27 @@
 			}
 			
 			// Watch the link
-			cssWatch( link , callback , options.title );
+			cssPoll( link , function() {
+				
+				cssUnpoll( link );
+				
+				if ( title ) {
+					link.title = title;
+				}
+				
+				callback();
+			} );
 			
 			// Add it to the doc
 			( document.getElementsByTagName("head")[0] || document.documentElement ).appendChild( link );
 			
-			// Opera safeguard:
-			// for same-domain stylesheets, we create a rule to control if the stylesheet has been properly loaded
-			try {
-				var stylesheets = document.styleSheets,
-					stylesheet,
-					title,
-					i = 0,
-					length = stylesheets.length;
-					
-				for ( ; i < length ; i++ ) {
-					
-					if ( stylesheet = stylesheets[ i ] ) {
-						
-						if ( ! stylesheet.insertRule ) break;
-						
-						if ( ( title = stylesheet.title ) == link.title ) {
-							stylesheet.insertRule(title+"{a:0}",0);
-							break;
-						}
-					}
-				}
-				
-			} catch(e) {}
 		}
-		
+			
 		return function( callback ) {
 			
 			var url = options.url,
 				callbacks;
-			
+				
 			if ( options.cache === false ) {
 				
 				url += ( /\?/.test( url ) ? "&" : "?" ) + "_=" + (new Date()).getTime();
@@ -81,10 +69,13 @@
 				
 				callbacks = loading[ url ] = [ callback ];
 				load( url , function() {
+					
 					while( callbacks.length ) {
 						( callbacks.shift() )();
 					}
+					
 					delete loading[ url ];
+					
 					loaded[ url ] = true;
 				} );
 				
@@ -95,138 +86,105 @@
 		
 	} );
 	
-	var	// Next css id
-		cssPollingId = ( new Date() ).getTime(),
-		
-		// Number of css being polled
+	var // Number of css being polled
 		cssPollingNb = 0,
 		
-		// Polled css
-		cssObjects = {},
+		// Polled css callbacks
+		cssCallbacks = {},
 		
 		// Main poller function
-		cssGlobalPoller = function() {
-	
-			var object,
-				callback,
-				link,
+		cssGlobalPoller = function () {
+			
+			var callback,
 				stylesheet,
 				stylesheets = document.styleSheets,
-				title,
+				href,
 				i,
-				length,
-				readyState,
-				rules;
+				length;
 				
-			if ( stylesheets ) { // Safeguard for IE
+			for ( i = 0 , length = stylesheets.length ; i < length ; i++ ) {
 				
-				for ( i = 0, length = stylesheets.length; i < length; i++ ) {
-					
-					if ( ( stylesheet = stylesheets[i] ) // Safeguard for IE
-						&& ( title = stylesheet.title )
-						&& ( object = cssObjects[title] ) ) {
-							
-						callback = object.callback;
-						link = object.link;
+				stylesheet = stylesheets[ i ];
+				
+				if ( ( href = stylesheet.href )
+					&& ( callback = cssCallbacks[ href ] ) ) {
 						
-						// Internet Explorer:
-						//  * links have a readyState property, we use it
-						readyState = link.readyState;
-						if ( readyState !== undefined) {
-							
-							if ( readyState=="loaded" || readyState=="complete" ) {
-								callback( stylesheet );
-							}
-							
-						} else {
-							
-							try {
-								
-								rules = stylesheet.cssRules;
-								
-								// Webkit:
-								// Stylesheet object is not created before the link has been loaded
-								//  * same-domain: cssRules is returned (no exception thrown)
-								//  * cross-domain: cssRules is empty (no exception thrown)
-								
-								// Gecko:
-								// An exception is thrown if the stylesheet hasn't been loaded
-								//  * same-domain: if loaded, cssRules is returned, else exception
-								//  * cross-domain: always throws an exception
-								
-								// Opera:
-								//  * same-domain: loaded or not, cssRules is returned
-								//  * cross-domain: always throws an exception
-								
-								// Opera safeguard
-								if ( rules.length === 1 && rules[0].selectorText == title ) {
-									continue;
-								}
-								
-								callback( stylesheet );
-								
-							} catch(e) {
-								
-								// Gecko: the engine throws NS_ERROR_DOM_* exceptions
-								if ( /NS_ERR/.test(e) ) {
-									
-									// Once loaded, a more specific NS_ERROR_DOM_SECURITY_ERR is thrown
-									// for cross-domain links
-									
-									if ( /SECURITY/.test(e) ) {
-	
-										callback( stylesheet );
-									
-									}
-								
-								// Opera (cross-domain)
-								} else {
-									
-									try {
-
-										stylesheet.deleteRule( 0 );
-										
-										// If the link hasn't been loaded yet, deleteRule is ignored by Opera
-										// but once loaded, it throws an exception
-										
-									} catch(_) { 
-										
-										callback( stylesheet );
-										
-									}
-								}
-							}
+					try {
+						
+						stylesheet.cssRules;
+						
+						// Webkit:
+						// Webkit browsers don't create the stylesheet object
+						// before the link has been loaded.
+						// When requesting rules for crossDomain links
+						// they simply return nothing (no exception thrown)
+						
+						// Gecko:
+						// NS_ERROR_DOM_INVALID_ACCESS_ERR thrown if the stylesheet is not loaded
+						// If the stylesheet is loaded:
+						//  * no error thrown for same-domain
+						//  * NS_ERROR_DOM_SECURITY_ERR thrown for cross-domain
+						
+						callback();
+					
+					} catch(e) {
+						
+						// Gecko:
+						// catch NS_ERROR_DOM_SECURITY_ERR
+						if ( /SECURITY/.test( e ) ) {
+							callback();
 						}
 					}
 				}
 			}
 		},
 		
-		// Watch stylesheet loading (based on a timer)
-		cssTimerId,
-		
-		cssWatch = function ( link , callback , finalTitle ) {
+		// Poll / Unpoll
+		cssPoll = function ( link , callback ) {
 			
-			var title = link.title = "_domcss_" + cssPollingId++;
-			
-			cssObjects[title] = {
-	
-				link: link,
+			// onreadystatechange
+			if ( link.readyState ) {
 				
-				callback: function( stylesheet ) {
-					delete cssObjects[ title ];
-					if ( ! --cssPollingNb ) {
-						clearInterval( cssTimerId );
+				link.onreadystatechange = function() {
+					
+					var readyState = link.readyState;
+					
+					if ( readyState === "complete" || readyState === "loaded" ) {
+						callback();
 					}
-					if ( finalTitle ) {
-						link.title = stylesheet.title = finalTitle;
-					}
-					dominoes.later( callback );
-				}	
-			};
+				};
 			
-			if ( ! cssPollingNb++ ) {
-				cssTimerId = setInterval( cssGlobalPoller , 13 );
+			// If onload is available, use it
+			} else if ( link.onload === null /* exclude Webkit => */ && link.all ) {
+				
+				link.onload = callback;
+				
+			// In any other browser, we poll
+			} else {
+				
+				cssCallbacks[ link.href ] = callback;
+				
+				if ( ! cssPollingNb++ ) {
+					cssTimer = setInterval( cssGlobalPoller , 13 );
+				}
+				
+			}
+			
+		},
+		cssUnpoll = function ( link ) {
+			
+			if ( cssCallbacks[ link.href ] ) {
+				
+				delete cssCallbacks[ link.href ];
+				
+				if ( ! --cssPollingNb ) {
+					clearInterval( cssTimer );
+				}
+				
+			} else {
+				
+				link.onload = link.onreadystatechange = null;
+				
 			}
 			
 		};
