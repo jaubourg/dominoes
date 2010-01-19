@@ -216,7 +216,7 @@ test("URL (options object)" , function() {
 	
 	dominoes( {
 		
-		url : url ( "./data/concat.php?str=A&wait=200" ) ,
+		url : url ( "./data/concat.php?str=A&wait=200" )
 		
 	} , function() {
 		equal( window.DOMINOES_UNIT_STRING , "A" , "URL has been loaded" );
