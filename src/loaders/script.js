@@ -14,14 +14,12 @@ var loadScript = loader( function ( options , callback ) {
 	// Attach handlers for all browsers
 	script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = function() {
 		
-		if ( ! ( readyState  = script[ STR_READY_STATE ] ) || readyState === "loaded" || readyState === "complete" ) {
+		if ( ! ( readyState  = script[ STR_READY_STATE ] ) || loadedCompleteRegExp.test( readyState ) ) {
 
 			// Handle memory leak in IE
 			script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = NULL;
 			
-			if ( head && script.parentNode ) {
-				head.removeChild( script );
-			}
+			head.removeChild( script );
 
 			if ( callback ) {
 				// Give time for execution (thank you so much, Opera devs!)

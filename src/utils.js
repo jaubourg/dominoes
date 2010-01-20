@@ -3,7 +3,10 @@ var	// Head node
 
 	// References
 	toString = {}.toString,
-	slice = [].slice;
+	slice = [].slice,
+	
+	// RegExp
+	loadedCompleteRegExp = /loaded|complete/;
 	
 // noop
 function noop() {}
