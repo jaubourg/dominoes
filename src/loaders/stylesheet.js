@@ -14,13 +14,11 @@ var loadStyleSheet = loader( function( options , callback ) {
 		// Watch the link
 		cssPoll( link , function() {
 			
-			cssUnpoll( link );
-			
 			if ( options.title ) {
 				link.title = options.title;
 			}
-			
 			callback();
+			
 		} );
 		
 		// Add it to the doc
@@ -35,7 +33,7 @@ var loadStyleSheet = loader( function( options , callback ) {
 	cssCallbacks = {},
 	
 	// Main poller function
-	cssGlobalPoller = function () {
+	cssPollFunction = function () {
 		
 		var callback,
 			stylesheet,
@@ -66,15 +64,23 @@ var loadStyleSheet = loader( function( options , callback ) {
 					// If the stylesheet is loaded:
 					//  * no error thrown for same-domain
 					//  * NS_ERROR_DOM_SECURITY_ERR thrown for cross-domain
-					
-					callback();
-				
+
+					throw "SECURITY";
+			
 				} catch(e) {
 					
-					// Gecko:
-					// catch NS_ERROR_DOM_SECURITY_ERR
+					// Gecko: catch NS_ERROR_DOM_SECURITY_ERR
+					// Webkit: catch SECURITY
 					if ( /SECURITY/.test( e ) ) {
-						callback();
+						
+						later( callback );
+						
+						delete cssCallbacks[ href ];
+					
+						if ( ! --cssPollingNb ) {
+							return TRUE;
+						}
+						
 					}
 				}
 			}
@@ -89,9 +95,8 @@ var loadStyleSheet = loader( function( options , callback ) {
 			
 			link[ STR_ON_READY_STATE_CHANGE ] = function() {
 				
-				var readyState = link[ STR_READY_STATE ];
-				
-				if ( readyState === "complete" || readyState === "loaded" ) {
+				if ( loadedCompleteRegExp.test( link[ STR_READY_STATE ] ) ) {
+					link[ STR_ON_READY_STATE_CHANGE ] = null;
 					callback();
 				}
 			};
@@ -99,7 +104,10 @@ var loadStyleSheet = loader( function( options , callback ) {
 		// If onload is available, use it
 		} else if ( link[ STR_ON_LOAD ] === null /* exclude Webkit => */ && link.all ) {
 			
-			link[ STR_ON_LOAD ] = callback;
+			link[ STR_ON_LOAD ] = function() {
+				link[ STR_ON_LOAD ] = null;
+				callback();
+			}
 			
 		// In any other browser, we poll
 		} else {
@@ -107,25 +115,8 @@ var loadStyleSheet = loader( function( options , callback ) {
 			cssCallbacks[ link[ STR_HREF ] ] = callback;
 			
 			if ( ! cssPollingNb++ ) {
-				cssTimer = setInterval( cssGlobalPoller , 13 );
+				poll( cssPollFunction );
 			}
-			
-		}
-		
-	},
-	cssUnpoll = function ( link ) {
-		
-		if ( cssCallbacks[ link[ STR_HREF ] ] ) {
-			
-			delete cssCallbacks[ link[ STR_HREF ] ];
-			
-			if ( ! --cssPollingNb ) {
-				clearInterval( cssTimer );
-			}
-			
-		} else {
-			
-			link[ STR_ON_LOAD ] = link[ STR_ON_READY_STATE_CHANGE ] = null;
 			
 		}
 		
