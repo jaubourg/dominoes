@@ -1,6 +1,3 @@
-var loaded = {},
-	loading = {};
-	
 /**
  * Executes an item
  * @param item the item to be executed
@@ -56,38 +53,8 @@ function execute( item , context , thread , callback ) {
 					
 				}
 				
-				if ( item[ STR_CACHE ] === FALSE ) {
-				
-					loadScript( item , callback || noop );
+				loadScript( item , callback || noop );
 					
-				} else if ( loaded[ url ] ) {
-					
-					callback && callback();
-					
-				} else if ( loading[ url ] ) {
-					
-					if ( callback ) {
-						loading[ url ].push( callback );
-					}
-					
-				} else {
-					
-					loading[ url ] = [];
-					
-					if ( callback ) {
-						loading[ url ].push( callback );
-					}
-					
-					loadScript( item , function() {
-						while( loading[ url ].length ) {
-							( loading[ url ].shift() )();
-						}
-						loaded[ url ] = TRUE;
-						delete loading[ url ];
-					} );
-					
-				}
-				
 			} else {
 				
 				execute( url , context , thread , callback );
@@ -124,23 +91,23 @@ function execute( item , context , thread , callback ) {
 						execute( item[ i++ ] , context , thread , function() {
 							iterate( i );
 						} );
-					} else {
-						callback && callback();
+					} else if ( callback ) {
+						callback();
 					}
 					
 				} )( 0 );
 				
 			}
 			
-		} else {
+		} else if ( callback ) {
 			
-			callback && callback();
+			callback();
 			
 		}
 		
-	} else {
+	} else if (callback ) {
 		
-		callback && callback();
+		callback();
 		
 	}
 }
