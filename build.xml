@@ -41,6 +41,9 @@
             <fileset file="src/rule.js" />
             <fileset file="src/execute.js" />
             <fileset file="src/parse.js" />
+            <fileset file="src/loaders/generic.js" />
+            <fileset file="src/loaders/script.js" />
+            <fileset file="src/loaders/stylesheet.js" />
             <fileset file="src/_outro.js" />
         </concat>
     	<replaceregexp match="@VERSION" replace="${version}" file="${DOM}" />
@@ -73,20 +76,10 @@
         <echo message="${DOM_MIN} built." />
     </target>
 
-    <target name="css" depends="dominoes" description="CSS plugin build">
-        <echo message="Building ${CSS}" />
-        <concat destfile="${CSS}">
-            <fileset file="src/plugins/css.js" />
-        </concat>
-    	<replaceregexp match="@VERSION" replace="${version}" file="${CSS}" />
-		<replaceregexp match="@DATE" replace="${date}" flags="g" byline="true" file="${CSS}" />
-        <echo message="${CSS} built." />
-    </target>
-
     <target name="clean">
         <delete dir="${dist}" />
     </target>
 
-    <target name="all" depends="clean,min,css" />
+    <target name="all" depends="clean,min" />
     
 </project>
