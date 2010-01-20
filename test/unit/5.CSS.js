@@ -1,16 +1,9 @@
-module("Plugins");
+module("CSS");
 
-function pluginRules() {
+function predefine() {
 	
 	if ( ! dominoes.rule("jQuery") ) {
-		dominoes
-			.rule( "jQuery" , "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" )
-			.functor( "css{O}" , function(options) {
-				return {
-					chain: "../dist/dominoes-css.js > $css{options}",
-					options: options
-				}
-			});
+		dominoes.rule( "jQuery" , "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" );
 	}
 	
 }
@@ -19,7 +12,7 @@ test( "Loading CSS (local)" , function() {
 	
 	stop();
 	
-	pluginRules();
+	predefine();
 	
 	dominoes("$css{data/style.php?left=27&wait=1000} jQuery >|" , function() {
 		var div = $("<div class='dominoes'/>").appendTo($("body"));
@@ -34,7 +27,7 @@ test( "Loading CSS (remote)" , function() {
 	
 	stop();
 	
-	pluginRules();
+	predefine();
 	
 	dominoes("$css{http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css} jQuery >|" , function() {
 		var div = $("<div class='ui-icon' />").appendTo($("body")),
