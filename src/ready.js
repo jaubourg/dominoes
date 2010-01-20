@@ -1,50 +1,56 @@
 var readyCallbacks = [],
-	readyListening = FALSE;
+	readyListenedTo = FALSE,
+	readyAcknowledged = FALSE,
+	readyFireing = FALSE;
+	
+function fireReady() {
+	
+	while ( readyCallbacks[ STR_LENGTH ] ) {
+			args = readyCallbacks.shift();
+			args[0].apply( document , slice.call( args , 1 ) );
+	}
+	
+	readyFireing = FALSE;
+	
+}
 
+function testReady() {
+					
+	if ( document[ STR_GET_ELEMENTS_BY_TAG_NAME ]
+		&& document.body
+		&& document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("body")[ STR_LENGTH ] ) {
+	
+		readyAcknowledged = readyFireing = TRUE;
+		later( fireReady );
+		
+		return TRUE;	
+	}
+	
+}
+	
 function ready( func ) {
 	
 	if ( isFunction ( func ) ) {
 		
-		if ( readyCallbacks ) {
-			
-			readyCallbacks.push( arguments );
+		readyCallbacks.push( arguments );
 		
-			if ( ! readyListening ) {
-				
-				readyListening = TRUE;
-				
-				function listen() {
-					
-					if ( document[ STR_GET_ELEMENTS_BY_TAG_NAME ]
-						&& ( document.body
-							|| document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("body")[ STR_LENGTH ] ) ) {
-						
-						while ( readyCallbacks[ STR_LENGTH ] ) {
-								args = readyCallbacks.shift();
-								args[0].apply( document , slice.call( args , 1 ) );
-						}
-							
-						readyCallbacks = undefined;
-										
-					} else {
-						
-						setTimeout( listen , 13 );
-						
-					}
-					
-				}
-				
-				listen();
-				
+		if ( ! readyListenedTo ) {
+			
+			readyListenedTo = TRUE;
+			
+			if ( ! testReady() ) {
+				poll( testReady );
 			}
 			
-		} else {
+		} else if ( readyAcknowledged && ! readyFireing ) {
 			
-			func.apply( document , slice.call( arguments , 1 ) );
-		
+			readyFireing = TRUE
+			fireReady();
+			
 		}
 		
-		return FALSE;
 	}
+	
+	return FALSE;
 }
 
