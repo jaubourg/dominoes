@@ -34,6 +34,7 @@
             <fileset file="src/_intro.js" />
             <fileset file="src/main.js" />
             <fileset file="src/utils.js" />
+            <fileset file="src/poll.js" />
             <fileset file="src/ready.js" />
             <fileset file="src/dataHolder.js" />
             <fileset file="src/property.js" />
