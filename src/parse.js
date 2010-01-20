@@ -127,7 +127,7 @@ function parseStringItem( string , context , thread ) {
 			
 			done = FALSE;
 			
-			if ( name && ! ( func = functor( name ) ) ) {
+			if ( name && ! ( func = predefinedFunctors[ name ] || functor( name ) ) ) {
 				error( "unknown functor" , name );
 			}
 			
