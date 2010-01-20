@@ -14,7 +14,7 @@ function error( type , msg ) {
  * @param actions
  */
 function dominoes() {
-	execute ( slice.call( arguments , 0 ) );
+	execute ( slice.call( arguments , 0 ) , {} , {} , noop );
 	return this;
 }
 

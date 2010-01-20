@@ -14,12 +14,9 @@ function execute( item , context , thread , callback ) {
 		
 		if ( item[ STR_OPTIONAL ] && callback ) {
 			callback();
-			callback = undefined;
+			callback = noop;
 		}
 
-		context = context || {};
-		thread = thread || {};
-		
 		if ( item[ STR_CHAIN ] ) {
 			context = item;
 			item = item[ STR_CHAIN ];
@@ -53,7 +50,7 @@ function execute( item , context , thread , callback ) {
 					
 				}
 				
-				loadScript( item , callback || noop );
+				loadScript( item , callback );
 					
 			} else {
 				
@@ -63,8 +60,8 @@ function execute( item , context , thread , callback ) {
 			
 		} else if ( isFunction( item ) ) {
 			
-			if ( item.call( context , callback || noop , thread ) !== FALSE ) {
-				callback && callback();
+			if ( item.call( context , callback , thread ) !== FALSE ) {
+				callback();
 			}
 		
 		} else if ( isArray( item ) && ( length = item[ STR_LENGTH ] ) ) {
@@ -72,15 +69,18 @@ function execute( item , context , thread , callback ) {
 			if ( item[ STR_PARALLEL ] ) {
 				
 				var i = 0,
-					num = length,
-					barrier = callback ? function() {
+					num = length;
+		
+				while ( i < length ) {
+					
+					execute( item[ i++ ] , context , thread , function() {
+						
 						if ( ! --num ) {
 							callback();
 						}
-					} : undefined ;
-		
-				while ( i < length ) {
-					execute( item[ i++ ] , context , thread , barrier );
+						
+					} );
+					
 				}
 				
 			} else {
@@ -91,7 +91,7 @@ function execute( item , context , thread , callback ) {
 						execute( item[ i++ ] , context , thread , function() {
 							iterate( i );
 						} );
-					} else if ( callback ) {
+					} else {
 						callback();
 					}
 					
@@ -99,13 +99,13 @@ function execute( item , context , thread , callback ) {
 				
 			}
 			
-		} else if ( callback ) {
+		} else {
 			
 			callback();
 			
 		}
 		
-	} else if (callback ) {
+	} else {
 		
 		callback();
 		
