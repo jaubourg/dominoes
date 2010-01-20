@@ -5,7 +5,7 @@ function dataHolder( create ) {
 	
 	return function( id , del ) {
 		
-		var length = arguments.length;
+		var length = arguments[ STR_LENGTH ];
 		
 		if ( length > 1 ) {
 			

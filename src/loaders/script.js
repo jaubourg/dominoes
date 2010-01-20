@@ -1,6 +1,6 @@
 var loadScript = loader( function ( options , callback ) {
 	
-	var script = document.createElement("script"),
+	var script = document[ STR_CREATE_ELEMENT ]("script"),
 		readyState;
 	
 	script.async = TRUE;
@@ -14,7 +14,7 @@ var loadScript = loader( function ( options , callback ) {
 	// Attach handlers for all browsers
 	script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = function() {
 		
-		if ( ! ( readyState  = script.readyState ) || readyState === "loaded" || readyState === "complete" ) {
+		if ( ! ( readyState  = script[ STR_READY_STATE ] ) || readyState === "loaded" || readyState === "complete" ) {
 
 			// Handle memory leak in IE
 			script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = NULL;

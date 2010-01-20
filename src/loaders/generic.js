@@ -36,7 +36,7 @@ function loader( loadFunction ) {
 			
 			loadFunction( options , function() {
 				
-				while( callbacks.length ) {
+				while( callbacks[ STR_LENGTH ] ) {
 					
 					( callbacks.shift() )();
 					

@@ -17,9 +17,9 @@ function ready( func ) {
 					
 					if ( document[ STR_GET_ELEMENTS_BY_TAG_NAME ]
 						&& ( document.body
-							|| document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("body").length ) ) {
+							|| document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("body")[ STR_LENGTH ] ) ) {
 						
-						while ( readyCallbacks.length ) {
+						while ( readyCallbacks[ STR_LENGTH ] ) {
 								args = readyCallbacks.shift();
 								args[0].apply( document , slice.call( args , 1 ) );
 						}

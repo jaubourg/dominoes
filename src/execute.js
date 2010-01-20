@@ -67,7 +67,7 @@ function execute( item , context , thread , callback ) {
 				callback && callback();
 			}
 		
-		} else if ( isArray( item ) && ( length = item.length ) ) {
+		} else if ( isArray( item ) && ( length = item[ STR_LENGTH ] ) ) {
 			
 			if ( item[ STR_PARALLEL ] ) {
 				

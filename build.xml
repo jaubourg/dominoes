@@ -53,7 +53,7 @@
 
     <target name="min" depends="dominoes" description="Minification using Google's Closure Compiler, *very* good in combination with GZip">
         <echo message="Building ${DOM_MIN}" />
-		<apply executable="java" parallel="false" verbose="true" dest="${dist}">
+		<apply executable="java" parallel="false" verbose="true">
 			<fileset dir="${dist}">
 				<include name="dominoes.js" />
 			</fileset>
@@ -62,16 +62,9 @@
 			<arg value="--warning_level" />
 			<arg value="QUIET" />
 			<arg value="--js_output_file" />
-			<targetfile />
+			<arg value="${DOM_MIN}" />
 			<arg value="--js" />
-			<mapper type="glob" from="dominoes.js" to="tmpmin" />
 		</apply>
-		<concat destfile="${DOM_MIN}">
-			<fileset file="src/_intro_min.js"/>
-			<fileset file="dist/tmpmin"/>
-		</concat>
-		<delete file="dist/tmpmin"/>
-    	<replaceregexp match="@VERSION" replace="${version}" file="${DOM_MIN}" />
 		<gzip src="${DOM_MIN}" destfile="${DOM_MIN}.gz"/>
         <echo message="${DOM_MIN} built." />
     </target>

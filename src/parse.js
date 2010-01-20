@@ -12,7 +12,7 @@ var	// Regular expressions
 	
 	// Miscellaneous
 	symbolsArray = "0 > >| { } {{ }}".split( R_DELIM ),
-	i = symbolsArray.length;
+	i = symbolsArray[ STR_LENGTH ];
 
 // Initialize symbols
 for (; --i ; SYMBOLS[ symbolsArray[ i ] ] = i );
@@ -27,7 +27,7 @@ function parseChain( chain ) {
 	chain = chain.split( R_DELIM );
 	
 	var i = 0,
-		length = chain.length,
+		length = chain[ STR_LENGTH ],
 		stack = [],
 		root = [],
 		current = root,
@@ -50,9 +50,9 @@ function parseChain( chain ) {
 						current.push( ready );
 					}
 					
-					if ( current.length ) {
+					if ( current[ STR_LENGTH ] ) {
 						
-						tmp = current.splice( 0 , current.length );
+						tmp = current.splice( 0 , current[ STR_LENGTH ] );
 						tmp[ STR_PARALLEL ] = current[ STR_PARALLEL ]; 
 						current.push( tmp , [] );
 						current[ STR_PARALLEL ] = FALSE;
@@ -72,7 +72,7 @@ function parseChain( chain ) {
 					
 				} else if ( item === SYM_END || item === SYM_END_OPT ) {
 					
-					if ( stack.length ) {
+					if ( stack[ STR_LENGTH ] ) {
 						current = stack.pop();
 					} else {
 						error( "unexpected symbol" , chain[i] );

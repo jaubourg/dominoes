@@ -19,13 +19,13 @@ var rule = dominoes.rule = dataHolder( function( id ) {
 				
 				( function internal() {
 
-					if ( list.length ) {
+					if ( list[ STR_LENGTH ] ) {
 						
-						execute( list.splice( 0 , list.length ) , context , thread , internal );
+						execute( list.splice( 0 , list[ STR_LENGTH ] ) , context , thread , internal );
 						
-					} else if ( callbacks.length ) {
+					} else if ( callbacks[ STR_LENGTH ] ) {
 						
-						while( callbacks.length ) {
+						while( callbacks[ STR_LENGTH ] ) {
 							( callbacks.shift() )();
 						}
 						

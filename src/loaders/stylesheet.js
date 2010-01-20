@@ -1,11 +1,11 @@
 var loadStyleSheet = loader( function( options , callback ) {
 		
-		var link = document.createElement("link");
+		var link = document[ STR_CREATE_ELEMENT ]("link");
 	
 		link.rel = "stylesheet";
 		link.type = "text/css";
 		link.media = options.media || "screen";
-		link.href = options[ STR_URL ];
+		link[ STR_HREF ] = options[ STR_URL ];
 			
 		if ( options[ STR_CHARSET ] ) {
 			link[ STR_CHARSET ] = options[ STR_CHARSET ];
@@ -44,11 +44,11 @@ var loadStyleSheet = loader( function( options , callback ) {
 			i,
 			length;
 			
-		for ( i = 0 , length = stylesheets.length ; i < length ; i++ ) {
+		for ( i = 0 , length = stylesheets[ STR_LENGTH ] ; i < length ; i++ ) {
 			
 			stylesheet = stylesheets[ i ];
 			
-			if ( ( href = stylesheet.href )
+			if ( ( href = stylesheet[ STR_HREF ] )
 				&& ( callback = cssCallbacks[ href ] ) ) {
 					
 				try {
@@ -85,11 +85,11 @@ var loadStyleSheet = loader( function( options , callback ) {
 	cssPoll = function ( link , callback ) {
 		
 		// onreadystatechange
-		if ( link.readyState ) {
+		if ( link[ STR_READY_STATE ] ) {
 			
 			link[ STR_ON_READY_STATE_CHANGE ] = function() {
 				
-				var readyState = link.readyState;
+				var readyState = link[ STR_READY_STATE ];
 				
 				if ( readyState === "complete" || readyState === "loaded" ) {
 					callback();
@@ -104,7 +104,7 @@ var loadStyleSheet = loader( function( options , callback ) {
 		// In any other browser, we poll
 		} else {
 			
-			cssCallbacks[ link.href ] = callback;
+			cssCallbacks[ link[ STR_HREF ] ] = callback;
 			
 			if ( ! cssPollingNb++ ) {
 				cssTimer = setInterval( cssGlobalPoller , 13 );
@@ -115,9 +115,9 @@ var loadStyleSheet = loader( function( options , callback ) {
 	},
 	cssUnpoll = function ( link ) {
 		
-		if ( cssCallbacks[ link.href ] ) {
+		if ( cssCallbacks[ link[ STR_HREF ] ] ) {
 			
-			delete cssCallbacks[ link.href ];
+			delete cssCallbacks[ link[ STR_HREF ] ];
 			
 			if ( ! --cssPollingNb ) {
 				clearInterval( cssTimer );
