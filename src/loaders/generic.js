@@ -45,10 +45,10 @@ function loader( loadFunction ) {
 				delete loading[ url ];
 				loaded[ url ] = TRUE;
 				
-			} )
+			} );
 			
 		}
 		
-	}
+	};
 }
 
