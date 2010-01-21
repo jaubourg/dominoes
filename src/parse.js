@@ -17,11 +17,7 @@ var	// Regular expressions
 // Initialize symbols
 for (; --i ; SYMBOLS[ symbolsArray[ i ] ] = i );
 
-/**
- * Parses a chain
- * @param expression
- * @return array
- */
+// Parse a chain
 function parseChain( chain ) {
 	
 	chain = chain.split( R_DELIM );
@@ -91,9 +87,7 @@ function parseChain( chain ) {
 	return root;
 }
 
-/**
- * Parse a string item
- */
+// Parse a string item
 function parseStringItem( string , context , thread ) {
 
 	var done,
@@ -151,10 +145,7 @@ function parseStringItem( string , context , thread ) {
 	return parseTemp( string );
 }
 
-/**
- * Parse a string
- * @param string
- */
+// Parse a string
 function parse( string , context , thread ) {
 	
 	var parsed;

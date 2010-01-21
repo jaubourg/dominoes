@@ -1,18 +1,11 @@
-/**
- * Throw an exception
- * @param type error type
- * @param msg error message
- */
+// Throw an exception
 function error( type , msg ) {
 	
 	throw [ exportName , type , msg ].join( ": " );  
 	
 }
 
-/**
- * Main function
- * @param actions
- */
+// Main function
 function dominoes() {
 	execute ( slice.call( arguments , 0 ) , {} , {} , noop );
 	return this;

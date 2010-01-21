@@ -1,10 +1,7 @@
 /**
- * @preserve Dominoes JavaScript Library v.@VERSION
- *
+ * @license Dominoes v.@VERSION [@DATE]
  * Copyright 2010, Julian Aubourg
  * Dual licensed under the MIT and GPL Version 2 licenses
- *
- * Date: @DATE
  */
 (function(
 	exportName ,

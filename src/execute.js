@@ -1,10 +1,4 @@
-/**
- * Executes an item
- * @param item the item to be executed
- * @param context the context of the item
- * @param thread current running thread
- * @param callback function to be called once finished
- */
+// Execute an item
 function execute( item , context , thread , callback ) {
 	
 	var url,
