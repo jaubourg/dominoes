@@ -22,7 +22,7 @@
 		<exec executable="git" outputproperty="git-qunit" dir="test/qunit" >  
 			<arg line="pull origin master"/>  
 		</exec> 
-		<echo message="git pull sizzle: ${git-qunit}" />
+		<echo message="git pull qunit: ${git-qunit}" />
 	</target>
 
     <target name="dominoes" depends="qunit-clone,qunit-pull" description="Main dominoes build, concatenates source files and replaces @VERSION">
