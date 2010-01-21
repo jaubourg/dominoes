@@ -1,4 +1,4 @@
-<project name="Dominoes" default="all" basedir=".">
+<project name="Dominoes" default="dominoes" basedir=".">
 
 	<tstamp>
 		<format property="date" pattern="M/d/y HH:mm:ss.SSS - z" locale="en,US"/>
@@ -9,8 +9,6 @@
 
     <property name="DOM" value="${dist}/dominoes.js" />
     <property name="DOM_MIN" value="${dist}/dominoes.min.js" />
-	
-    <property name="CSS" value="${dist}/dominoes-css.js" />
 	
 	<available property="qunit" file="test/qunit" />
 	
@@ -28,7 +26,7 @@
 	</target>
 
     <target name="dominoes" depends="qunit-clone,qunit-pull" description="Main dominoes build, concatenates source files and replaces @VERSION">
-        <echo message="Building ${DOM}" />
+        <echo message="Building: ${DOM}" />
         <mkdir dir="${dist}" />
         <concat destfile="${DOM}">
             <fileset file="src/_intro.js" />
@@ -49,11 +47,7 @@
         </concat>
     	<replaceregexp match="@VERSION" replace="${version}" file="${DOM}" />
 		<replaceregexp match="@DATE" replace="${date}" flags="g" byline="true" file="${DOM}" />
-        <echo message="${DOM} built." />
-    </target>
-
-    <target name="min" depends="dominoes" description="Minification using Google's Closure Compiler, *very* good in combination with GZip">
-        <echo message="Building ${DOM_MIN}" />
+        <echo message="Building: ${DOM_MIN}" />
 		<apply executable="java" parallel="false" verbose="true">
 			<fileset dir="${dist}">
 				<include name="dominoes.js" />
@@ -66,14 +60,15 @@
 			<arg value="${DOM_MIN}" />
 			<arg value="--js" />
 		</apply>
+    	<replaceregexp match=" @license" replace="" file="${DOM}" />
 		<gzip src="${DOM_MIN}" destfile="${DOM_MIN}.gz"/>
-        <echo message="${DOM_MIN} built." />
     </target>
+    
+    <target name="all" depends="dominoes" />
 
     <target name="clean">
         <delete dir="${dist}" />
+        <delete dir="test/qunit" />
     </target>
-
-    <target name="all" depends="clean,min" />
     
 </project>
