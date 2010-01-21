@@ -30,7 +30,7 @@ function parseChain( chain ) {
 		tmp,
 		item;
 	
-	current[ STR_PARALLEL ] = TRUE;
+	current.P = TRUE;
 	
 	for( ; i < length ; i++ ) {
 		
@@ -49,11 +49,11 @@ function parseChain( chain ) {
 					if ( current[ STR_LENGTH ] ) {
 						
 						tmp = current.splice( 0 , current[ STR_LENGTH ] );
-						tmp[ STR_PARALLEL ] = current[ STR_PARALLEL ]; 
+						tmp.P = current.P; 
 						current.push( tmp , [] );
-						current[ STR_PARALLEL ] = FALSE;
+						current.P = FALSE;
 						current = current[ 1 ];
-						current[ STR_PARALLEL ] = TRUE;
+						current.P = TRUE;
 						
 					}
 					
@@ -63,8 +63,8 @@ function parseChain( chain ) {
 					current.push( tmp );
 					stack.push( current );
 					current = tmp;
-					current[ STR_PARALLEL ] = TRUE;
-					current[ STR_OPTIONAL ] = item === SYM_BEGIN_OPT;
+					current.P = TRUE;
+					current.O = item === SYM_BEGIN_OPT;
 					
 				} else if ( item === SYM_END || item === SYM_END_OPT ) {
 					

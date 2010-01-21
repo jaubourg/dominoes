@@ -42,7 +42,7 @@ var rule = dominoes.rule = dataHolder( function( id ) {
 			
 			return FALSE;
 		},
-		list = rule[ STR_ACTIONS ] = rule[ STR_ACTIONS ] || [];
+		list = rule.A = rule.A || [];
 	
 	list.push( slice.call( arguments , 1 ) );
 

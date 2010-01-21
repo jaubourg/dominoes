@@ -6,7 +6,7 @@ function execute( item , context , thread , callback ) {
 	
 	if ( item ) {
 		
-		if ( item[ STR_OPTIONAL ] && callback ) {
+		if ( item.O && callback ) {
 			callback();
 			callback = noop;
 		}
@@ -60,7 +60,7 @@ function execute( item , context , thread , callback ) {
 		
 		} else if ( isArray( item ) && ( length = item[ STR_LENGTH ] ) ) {
 			
-			if ( item[ STR_PARALLEL ] ) {
+			if ( item.P ) {
 				
 				var i = 0,
 					num = length;
@@ -79,7 +79,7 @@ function execute( item , context , thread , callback ) {
 				
 			} else {
 			
-				( function iterate( i ) {
+				function iterate( i ) {
 					
 					if ( i < length ) {
 						execute( item[ i++ ] , context , thread , function() {
@@ -89,7 +89,9 @@ function execute( item , context , thread , callback ) {
 						callback();
 					}
 					
-				} )( 0 );
+				}
+				
+				iterate( 0 );
 				
 			}
 			

@@ -1,7 +1,7 @@
 // Throw an exception
 function error( type , msg ) {
 	
-	throw [ exportName , type , msg ].join( ": " );  
+	throw [ STR_DOMINOES , type , msg ].join( ": " );  
 	
 }
 

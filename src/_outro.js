@@ -1,17 +1,16 @@
 // ### EXPOSE ###
 
-dominoes = window[ exportName ] = window[ exportName ] || dominoes;
+dominoes = window[ STR_DOMINOES ] = window[ STR_DOMINOES ] || dominoes;
 
 }).apply(
 	window ,
-	"A|cache|chain|charset|createElement|getElementsByTagName|href|length|onload|onreadystatechange|O|L|P|readyState|url".split( "|" )
+	"cache chain charset createElement dominoes getElementsByTagName href length onload onreadystatechange readyState url".split( " " )
 );
 
 })(
-	"dominoes" ,
 	window ,
 	document ,
-	true ,
-	false ,
+	!0 ,
+	!1 ,
 	null
 );
