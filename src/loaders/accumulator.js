@@ -39,3 +39,4 @@ function accumulator( functor ) {
 	} );
 	
 }
+
