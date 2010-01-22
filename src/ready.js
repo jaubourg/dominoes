@@ -16,8 +16,8 @@ function fireReady() {
 
 function testReady() {
 					
-	if ( document[ STR_GET_ELEMENTS_BY_TAG_NAME ]
-		&& document.body
+	if ( document.body
+		&& document[ STR_GET_ELEMENTS_BY_TAG_NAME ]
 		&& document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("body")[ STR_LENGTH ] ) {
 	
 		readyAcknowledged = readyFireing = TRUE;
