@@ -24,13 +24,14 @@ var // Predefined functors
 	// Declare a functor
 	functor = dominoes.functor = dataHolder( function( id , func ) {
 	
-		var parts = /^\s*([^\${}]+)({(\s|S|O|F|\|)*})?\s*$/.exec( id );
+		var parts = /^\s*([^\${}]+)({(\s|S|O|F|\+|\|)*})?\s*$/.exec( id );
 		
 		if ( parts ) {
 				
 			if ( isFunction( func ) ) {
 			
-				var functors = this,
+				var STR_PLUS = "+",
+					functors = this,
 					id = parts[ 1 ],
 					functor = functors[ id ] = functors[ id ] || function( _data , thread ) {
 						
@@ -39,7 +40,19 @@ var // Predefined functors
 	
 						if ( data ) {
 							
-							if ( isString( data ) && ( types.S || types.O ) ) {
+							if ( types[ STR_PLUS ] && isString( data ) ) {
+								
+								if ( types[ STR_PLUS ] !== plus ) {
+									plus = types[ STR_PLUS ];
+									accu = accumulator( plus );
+								}
+								
+								data = function( callback ) {
+									accu( { url : _data } , callback );
+									return FALSE;
+								};
+								
+							} else if ( isString( data ) && ( types.S || types.O ) ) {
 								
 								if ( types.S ) {
 	
@@ -69,7 +82,9 @@ var // Predefined functors
 						return data;
 						
 					},
+					accu = functor.A,
 					types = functor.T = functor.T || {},
+					plus = types[ STR_PLUS ],
 					typesString = parts[ 2 ] ? parts[ 2 ].replace( /^{\s*|\s*}$/g , "" ) : "",
 					tmp = ( typesString || "F|S|O" ).split( /\s*\|\s*/ ),
 					length = tmp[ STR_LENGTH ],

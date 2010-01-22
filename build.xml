@@ -41,6 +41,7 @@
             <fileset file="src/execute.js" />
             <fileset file="src/parse.js" />
             <fileset file="src/loaders/generic.js" />
+            <fileset file="src/loaders/accumulator.js" />
             <fileset file="src/loaders/script.js" />
             <fileset file="src/loaders/stylesheet.js" />
             <fileset file="src/_outro.js" />
