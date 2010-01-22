@@ -1,4 +1,4 @@
-// ### EXPOSE ###
+// EXPOSE
 
 dominoes = window[ STR_DOMINOES ] = window[ STR_DOMINOES ] || dominoes;
 
