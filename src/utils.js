@@ -37,3 +37,4 @@ for ( temp in { Array:1 , Function:1 , String:1 } ) {
 var isArray = dominoes.isArray,
 	isFunction = dominoes.isFunction,
 	isString = dominoes.isString;
+
