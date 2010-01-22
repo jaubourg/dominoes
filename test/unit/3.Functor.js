@@ -21,6 +21,7 @@ test("Setting / retrieving", function() {
 	strictEqual ( dominoes.functor( "test" ).T.F , noOp , "The functor was properly stored for Functions" );
 	strictEqual ( dominoes.functor( "test" ).T.S , noOp , "The functor was properly stored for Strings" );
 	strictEqual ( dominoes.functor( "test" ).T.O , noOp , "The functor was properly stored for Options" );
+	strictEqual ( dominoes.functor( "test" ).T["+"] , undefined , "The functor was not stored for Accumulator" );
 
 	dominoes.functor( false );
 	
@@ -43,9 +44,19 @@ test("Setting / retrieving (typed with no value)", function() {
 	strictEqual ( dominoes.functor( "test" ).T.F , noOp , "The functor was properly stored for Functions" );
 	strictEqual ( dominoes.functor( "test" ).T.S , noOp , "The functor was properly stored for Strings" );
 	strictEqual ( dominoes.functor( "test" ).T.O , noOp , "The functor was properly stored for Options" );
+	strictEqual ( dominoes.functor( "test" ).T["+"] , undefined , "The functor was not stored for Accumulator" );
 	
 	dominoes.functor( false );
 
+});
+
+test("Setting / retrieving (accumulator)", function() {
+	
+	strictEqual ( dominoes.functor( "test{+}" , noOp ) , dominoes , "Setting a functor returns dominoes" );
+	strictEqual ( dominoes.functor( "test" ).T["+"] , noOp , "The functor was properly stored for Accumulator" );
+
+	dominoes.functor( false );
+	
 });
 
 test("Empty list" , function() {
@@ -275,3 +286,181 @@ test("Selective given type" , function() {
 	
 });
 
+test("Accumulator (simple)" , function() {
+	
+	var result;
+	
+	dominoes.functor("test{+}" , function( array ) {
+		
+		result = "" + array;
+		
+	} );
+	
+	stop();
+	
+	dominoes("$test{A} $test{F} $test{E} $test{B} $test{D} $test{C}" , function() {
+		strictEqual( result , "A,B,C,D,E,F" , "Accumulator worked" );
+		dominoes.functor( false );
+		start();
+	} );
+	
+});
+
+test("Accumulator (multiple)" , function() {
+	
+	expect(1);
+	
+	var result;
+	
+	dominoes.functor("test{+}" , function( array ) {
+		
+		result = "" + array;
+		
+	} );
+	
+	stop();
+	
+	var number = 5;
+	
+	for ( var letter in { D:1 , E:1 , A:1 , C:1 , B:1 , F:1 } ) {
+		dominoes( "$test{" + letter + "}" , function() {
+			if ( ! --number ) {
+				strictEqual( result , "A,B,C,D,E,F" , "Accumulator worked" );
+				dominoes.functor( false );
+				start();
+			}
+		} );
+	}
+	
+});
+
+test("Accumulator (multiple, asynchronous)" , function() {
+	
+	expect(1);
+	
+	var result;
+	
+	dominoes.functor("test{+}" , function( array ) {
+		
+		return function( callback ) {
+			
+			setTimeout( function() {
+				
+				result = "" + array;
+				callback();
+				
+			} , 50 );
+			
+			return false;
+		};
+		
+	} );
+	
+	stop();
+	
+	var number = 6;
+	
+	for ( var letter in { D:1 , E:1 , A:1 , C:1 , B:1 , F:1 } ) {
+		dominoes( "$test{" + letter + "}" , function() {
+			if ( ! --number ) {
+				strictEqual( result , "A,B,C,D,E,F" , "Accumulator worked" );
+				dominoes.functor( false );
+				start();
+			}
+		} );
+	}
+	
+});
+
+test("Accumulator (redefine)" , function() {
+	
+	var control;
+	
+	dominoes.functor("test{+}" , function( array ) {
+		control = "" + array + 1;
+	} );
+	
+	dominoes.functor("test{+}" , function( array ) {
+		control = "" + array + 2;
+	} );
+	
+	stop();
+	
+	dominoes("$test{A}" , function() {
+		strictEqual( control , "A2" , "Functor was redefined" );
+		dominoes.functor( false );
+		start();
+	} );
+	
+});
+
+test("Accumulator (url)", function() {
+	
+	window.DOMINOES_UNIT_STRING = "";
+	
+	stop();
+	
+	dominoes.functor("jQuery{+}" , function( array ) {
+		
+		return url( "data/concat.php?str=" + escape( array.join(" ") ) );
+		
+	} );
+	
+	dominoes("$jQuery{core} $jQuery{ajax} $jQuery{event} $jQuery{css}" , function() {
+		
+		strictEqual( window.DOMINOES_UNIT_STRING ,  "ajax core css event" , "URL was properly built" );
+		dominoes.functor( false );
+		start();
+		
+	} );
+	
+});
+
+test("Accumulator (complex scenario)", function() {
+	
+	window.DOMINOES_UNIT_STRING = "";
+	
+	stop();
+	
+	dominoes.functor("_jQuery{+}" , function( array ) {
+		
+		return url( "data/concat.php?str=" + escape( array.join(" ") ) );
+		
+	} );
+	
+	for ( var lib in { core:1 , ajax:1 , event:1 , css:1 , manipulation:1 } ) {
+		dominoes.rule( "jQuery:" + lib , "$_jQuery{" + lib + "}" );
+	}
+	
+	var number = 4;
+	
+	function done() {
+		if ( ! --number ) {
+			strictEqual( window.DOMINOES_UNIT_STRING , "ajax core css event manipulation ajaxCode eventCode cssCode manipulationCode" , "Proper order" );
+			dominoes.rule( false );
+			dominoes.functor( false );
+			start();
+		}
+	}
+	
+	dominoes("jQuery:core jQuery:ajax" , function() {
+		window.DOMINOES_UNIT_STRING += " ajaxCode";
+		done();
+	} );
+	
+	dominoes("jQuery:core jQuery:event jQuery:css" , function() {
+		window.DOMINOES_UNIT_STRING += " cssCode";
+		done();
+	} );
+	
+	dominoes("jQuery:core jQuery:manipulation" , function() {
+		window.DOMINOES_UNIT_STRING += " manipulationCode";
+		done();
+	} );
+	
+	dominoes("jQuery:core jQuery:ajax jQuery:event" , function() {
+		window.DOMINOES_UNIT_STRING += " eventCode";
+		done();
+	} );
+	
+});
