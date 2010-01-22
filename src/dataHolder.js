@@ -19,7 +19,7 @@ function dataHolder( create ) {
 				
 			} else if (create) {
 				
-				create.apply( data , arguments );
+				create[ STR_APPLY ]( data , arguments );
 				
 			} else {
 				

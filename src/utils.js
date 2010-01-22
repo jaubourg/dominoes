@@ -1,21 +1,23 @@
 var	// Head node
-	head = document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("head")[0] || document.documentElement,
+	head = document[ STR_GET_ELEMENTS_BY_TAG_NAME ]( "head" )[ 0 ] || document.documentElement,
 
 	// References
 	toString = {}.toString,
 	slice = [].slice,
 	
 	// RegExp
-	loadedCompleteRegExp = /loaded|complete/;
+	loadedCompleteRegExp = /loaded|complete/,
+	
+	// Temp var
+	temp;
 	
 // noop
 function noop() {}
 
 // Defer execution
 function later( func , self ) {
-	var args = slice.call( arguments , 2 )
 	setTimeout( function() {
-		func.apply( self || window , args );
+		func[ STR_APPLY ]( self || window , slice[ STR_CALL ]( arguments , 2 ) );
 	} , 0 );
 	return this;
 }
@@ -23,15 +25,15 @@ function later( func , self ) {
 dominoes.later = later;
 
 // Utilities
-function isArray( object ) {
-	return toString.call( object ) === "[object Array]";
+for ( temp in { Array:1 , Function:1 , String:1 } ) {
+	( function( name , str ) {
+		str = "[object " + name + "]";
+		dominoes[ "is" + name ] = function( object ) {
+			return toString[ STR_CALL ]( object ) === str;
+		};
+	} )( temp );
 }
 
-function isFunction( object ) {
-	return toString.call( object ) === "[object Function]";
-}
-
-function isString( object ) {
-	return typeof object === "string";
-}
-
+var isArray = dominoes.isArray,
+	isFunction = dominoes.isFunction,
+	isString = dominoes.isString;

@@ -1,10 +1,10 @@
 // EXPOSE
 
-dominoes = window[ STR_DOMINOES ] = window[ STR_DOMINOES ] || dominoes;
+window[ STR_DOMINOES ] = dominoes;
 
-}).apply(
+})[ STR_APPLY ](
 	window ,
-	"cache chain charset createElement dominoes getElementsByTagName href length onload onreadystatechange + readyState url".split( " " )
+	"cache call chain charset createElement getElementsByTagName href length onload onreadystatechange + push readyState url".split( " " )
 );
 
 })(
@@ -12,5 +12,7 @@ dominoes = window[ STR_DOMINOES ] = window[ STR_DOMINOES ] || dominoes;
 	document ,
 	!0 ,
 	!1 ,
-	null
+	null,
+	"apply",
+	"dominoes"
 );

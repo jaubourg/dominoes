@@ -11,7 +11,7 @@ var	// Regular expressions
 	/** @const */ SYM_END_OPT =		6,
 	
 	// Miscellaneous
-	symbolsArray = "0 > >| { } {{ }}".split( R_DELIM ),
+	symbolsArray = "0 > >| ( ) (( ))".split( R_DELIM ),
 	i = symbolsArray[ STR_LENGTH ];
 
 // Initialize symbols
@@ -43,14 +43,14 @@ function parseChain( chain ) {
 				if ( item === SYM_WAIT || item === SYM_READY ) {
 					
 					if ( item === SYM_READY ) {
-						current.push( ready );
+						current[ STR_PUSH ]( ready );
 					}
 					
 					if ( current[ STR_LENGTH ] ) {
 						
 						tmp = current.splice( 0 , current[ STR_LENGTH ] );
 						tmp.P = current.P; 
-						current.push( tmp , [] );
+						current[ STR_PUSH ]( tmp , [] );
 						current.P = FALSE;
 						current = current[ 1 ];
 						current.P = TRUE;
@@ -60,8 +60,8 @@ function parseChain( chain ) {
 				} else if ( item === SYM_BEGIN || item === SYM_BEGIN_OPT ) {
 					
 					tmp = [];
-					current.push( tmp );
-					stack.push( current );
+					current[ STR_PUSH ]( tmp );
+					stack[ STR_PUSH ]( current );
 					current = tmp;
 					current.P = TRUE;
 					current.O = item === SYM_BEGIN_OPT;
@@ -77,7 +77,7 @@ function parseChain( chain ) {
 					
 			} else {
 			
-				current.push( item );
+				current[ STR_PUSH ]( item );
 				
 			}
 		}
@@ -98,11 +98,12 @@ function parseStringItem( string , context , thread ) {
 		
 	function parseTemp( string ) {
 		
-		tmp = /^ \(\* ([0-9]+) \*\) $/.exec( string );
+		tmp = /^ { ([0-9]+) } $/.exec( string );
 		
-		return tmp ? data[ 1 * tmp[ 1 ] ] : string.replace( / \(\* ([0-9]+) \*\) /g , function( _ , key ) {
+		return tmp ? data[ 1 * tmp[ 1 ] ] : string.replace( / { ([0-9]+) } /g , function( _ , key ) {
 			
 			tmp = data[ 1 * key ];
+			
 			if ( ! isString( tmp ) ) {
 				error( "type mismatch" , "string expected" );
 			}
@@ -117,7 +118,7 @@ function parseStringItem( string , context , thread ) {
 	
 		done = TRUE;
 		
-		string = string.replace( /\$([^\${}]*){([^\${}]*)}/g , function( _ , name , args ) {
+		string = string.replace( /\$([^$()]*)\(([^$()]*)\)/g , function( _ , name , args ) {
 			
 			done = FALSE;
 			
@@ -131,13 +132,13 @@ function parseStringItem( string , context , thread ) {
 				args = parse ( args , context , thread );
 			}
 			
-			data[ ++ id ] = name ? func.call( context , args , thread ) : property( args );
+			data[ ++ id ] = name ? func[ STR_CALL ]( context , args , thread ) : property( args );
 			
 			if ( isString( data[ id ] ) ) {
 				data[ id ] = parse( data[ id ] , context , thread );
 			}
 			
-			return " (* " + id + " *) ";
+			return " { " + id + " } ";
 			
 		});
 	}

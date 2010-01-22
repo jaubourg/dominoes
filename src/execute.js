@@ -54,7 +54,7 @@ function execute( item , context , thread , callback ) {
 			
 		} else if ( isFunction( item ) ) {
 			
-			if ( item.call( context , callback , thread ) !== FALSE ) {
+			if ( item[ STR_CALL ]( context , callback , thread ) !== FALSE ) {
 				callback();
 			}
 		

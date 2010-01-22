@@ -28,7 +28,7 @@ function loader( loadFunction ) {
 			
 		} else if ( callbacks = loading[ url ] ) {
 			
-			callbacks.push( callback );
+			callbacks[ STR_PUSH ]( callback );
 			
 		} else {
 			

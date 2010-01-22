@@ -106,7 +106,7 @@ test("Non blocking sub-expression" , function() {
 	
 	dominoes( {
 		
-		chain: "{{ first > restart }} second > third",
+		chain: "(( first > restart )) second > third",
 		
 		first: function(callback) {
 			setTimeout( function() {

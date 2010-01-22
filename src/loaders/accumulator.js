@@ -21,7 +21,7 @@ function accumulator( functor ) {
 				launched = FALSE;
 				
 				for ( string in _callbacks ) {
-					array.push( string );
+					array[ STR_PUSH ]( string );
 				}
 				
 				array.sort();

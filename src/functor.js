@@ -4,7 +4,7 @@ var // Predefined functors
 	// Make predefined
 	predefinedFunctor = function( name , types , action ) {
 		
-		functor( name + "{" + types + "}" , function( arg ) {
+		functor( name + "(" + types + ")" , function( arg ) {
 			
 			return function( callback ) {
 				
@@ -24,7 +24,7 @@ var // Predefined functors
 	// Declare a functor
 	functor = dominoes.functor = dataHolder( function( id , func ) {
 	
-		var parts = /^\s*([^\${}]+)({(\s|S|O|F|\+|\|)*})?\s*$/.exec( id );
+		var parts = /^([^$()]+)(?:\(([|SOF+]*)\))?$/.exec( id );
 		
 		if ( parts ) {
 				
@@ -39,10 +39,10 @@ var // Predefined functors
 	
 						if ( data ) {
 							
-							if ( types[ STR_PLUS ] && isString( data ) ) {
+							if ( subFunctors[ STR_PLUS ] && isString( data ) ) {
 								
-								if ( types[ STR_PLUS ] !== plus ) {
-									plus = types[ STR_PLUS ];
+								if ( subFunctors[ STR_PLUS ] !== plus ) {
+									plus = subFunctors[ STR_PLUS ];
 									accu = accumulator( plus );
 								}
 								
@@ -51,25 +51,25 @@ var // Predefined functors
 									return FALSE;
 								};
 								
-							} else if ( isString( data ) && ( types.S || types.O ) ) {
+							} else if ( isString( data ) && ( subFunctors.S || subFunctors.O ) ) {
 								
-								if ( types.S ) {
+								if ( subFunctors.S ) {
 	
-									data = types.S.call( context , data , thread );
+									data = subFunctors.S[ STR_CALL ]( context , data , thread );
 								
-								} else if ( types.O ) {
+								} else if ( subFunctors.O ) {
 	
-									data = types.O.call( context , { url : data } , thread );
+									data = subFunctors.O[ STR_CALL ]( context , { url : data } , thread );
 								
 								}
 							
-							} else if ( data.url && types.O ) {
+							} else if ( data.url && subFunctors.O ) {
 								
-								data = types.O.call( context , data , thread );
+								data = subFunctors.O[ STR_CALL ]( context , data , thread );
 							
-							} else if ( types.F ) {
+							} else if ( subFunctors.F ) {
 								
-								data = types.F.call( context , isFunction( data ) ? data : function ( callback , thread ) {
+								data = subFunctors.F[ STR_CALL ]( context , isFunction( data ) ? data : function ( callback , thread ) {
 									execute( _data , this , thread , callback );
 									return FALSE;
 								} , thread );
@@ -82,15 +82,13 @@ var // Predefined functors
 						
 					},
 					accu = functor.A,
-					types = functor.T = functor.T || {},
-					plus = types[ STR_PLUS ],
-					typesString = parts[ 2 ] ? parts[ 2 ].replace( /^{\s*|\s*}$/g , "" ) : "",
-					tmp = ( typesString || "F|S|O" ).split( /\s*\|\s*/ ),
-					length = tmp[ STR_LENGTH ],
-					i = 0;
+					subFunctors = functor.S = functor.S || {},
+					plus = subFunctors[ STR_PLUS ],
+					types = ( parts[ 2 ] || "F|S|O" ).split( /\|/ ),
+					i = types[ STR_LENGTH ];
 					
-				for ( ; i < length ; i++ ) {
-					types[ tmp[ i ] ] = func;
+				while( i-- ) {
+					subFunctors[ types[ i ] ] = func;
 				}
 					
 			}

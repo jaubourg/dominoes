@@ -1,6 +1,6 @@
 var loadScript = loader( function ( options , callback ) {
 	
-	var script = document[ STR_CREATE_ELEMENT ]("script"),
+	var script = document[ STR_CREATE_ELEMENT ]( "script" ),
 		readyState;
 	
 	script.async = TRUE;

@@ -7,7 +7,7 @@ function fireReady() {
 	
 	while ( readyCallbacks[ STR_LENGTH ] ) {
 			args = readyCallbacks.shift();
-			args[0].apply( document , slice.call( args , 1 ) );
+			args[0][ STR_APPLY ]( document , slice[ STR_CALL ]( args , 1 ) );
 	}
 	
 	readyFireing = FALSE;
@@ -32,7 +32,7 @@ function ready( func ) {
 	
 	if ( isFunction ( func ) ) {
 		
-		readyCallbacks.push( arguments );
+		readyCallbacks[ STR_PUSH ]( arguments );
 		
 		if ( ! readyListenedTo ) {
 			

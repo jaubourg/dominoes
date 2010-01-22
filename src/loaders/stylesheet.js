@@ -1,6 +1,7 @@
 var loadStyleSheet = loader( function( options , callback ) {
 		
-		var link = document[ STR_CREATE_ELEMENT ]("link");
+		var link = document[ STR_CREATE_ELEMENT ]( "link" ),
+			title = options.title;
 	
 		link.rel = "stylesheet";
 		link.type = "text/css";
@@ -14,8 +15,8 @@ var loadStyleSheet = loader( function( options , callback ) {
 		// Watch the link
 		cssPoll( link , function() {
 			
-			if ( options.title ) {
-				link.title = options.title;
+			if ( title ) {
+				link.title = title;
 			}
 			callback();
 			
@@ -39,10 +40,9 @@ var loadStyleSheet = loader( function( options , callback ) {
 			stylesheet,
 			stylesheets = document.styleSheets,
 			href,
-			i,
-			length;
+			i = stylesheets[ STR_LENGTH ];
 			
-		for ( i = 0 , length = stylesheets[ STR_LENGTH ] ; i < length ; i++ ) {
+		while ( i-- ) {
 			
 			stylesheet = stylesheets[ i ];
 			
@@ -97,16 +97,16 @@ var loadStyleSheet = loader( function( options , callback ) {
 			link[ STR_ON_READY_STATE_CHANGE ] = function() {
 				
 				if ( loadedCompleteRegExp.test( link[ STR_READY_STATE ] ) ) {
-					link[ STR_ON_READY_STATE_CHANGE ] = null;
+					link[ STR_ON_READY_STATE_CHANGE ] = NULL;
 					callback();
 				}
 			};
 		
 		// If onload is available, use it
-		} else if ( link[ STR_ON_LOAD ] === null /* exclude Webkit => */ && link.all ) {
+		} else if ( link[ STR_ON_LOAD ] === NULL /* exclude Webkit => */ && link.all ) {
 			
 			link[ STR_ON_LOAD ] = function() {
-				link[ STR_ON_LOAD ] = null;
+				link[ STR_ON_LOAD ] = NULL;
 				callback();
 			}
 			

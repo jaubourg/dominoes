@@ -7,7 +7,7 @@ function error( type , msg ) {
 
 // Main function
 function dominoes() {
-	execute ( slice.call( arguments , 0 ) , {} , {} , noop );
+	execute ( slice[ STR_CALL ]( arguments , 0 ) , {} , {} , noop );
 	return this;
 }
 

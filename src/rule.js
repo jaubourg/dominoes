@@ -7,7 +7,7 @@ var rule = dominoes.rule = dataHolder( function( id ) {
 			
 			if ( callback && callback !== noop ) {
 				
-				callbacks.push( callback );
+				callbacks[ STR_PUSH ]( callback );
 				
 			}
 			
@@ -44,7 +44,7 @@ var rule = dominoes.rule = dataHolder( function( id ) {
 		},
 		list = rule.A = rule.A || [];
 	
-	list.push( slice.call( arguments , 1 ) );
+	list[ STR_PUSH ]( slice[ STR_CALL ]( arguments , 1 ) );
 
 } );
 

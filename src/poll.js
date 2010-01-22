@@ -9,9 +9,9 @@ function pollFunction() {
 		
 		try {
 		
-			if ( args[0].apply( slice.call( args , 1 ) ) !== TRUE ) {
+			if ( args[0][ STR_APPLY ]( slice[ STR_CALL ]( args , 1 ) ) !== TRUE ) {
 				
-				tmp.push( args );
+				tmp[ STR_PUSH ]( args );
 				
 			}
 			
@@ -38,7 +38,7 @@ var pollTimer,
 				pollTimer = setInterval( pollFunction , 13 );
 			}
 			
-			pollTasks.push( arguments );
+			pollTasks[ STR_PUSH ]( arguments );
 		}
 	};
 	

@@ -44,7 +44,7 @@ test("Expansion" , function() {
 	
 	dominoes.property( "string" , "TEST_PROP_IN_URL" );
 	
-	dominoes( url( "./data/concat.php?str=${string}" ) , function() {
+	dominoes( url( "./data/concat.php?str=$(string)" ) , function() {
 		
 		equal( window.DOMINOES_UNIT_STRING , "TEST_PROP_IN_URL" , "Property was properly expanded" );
 		dominoes.property( false );
@@ -63,9 +63,9 @@ test("Expansion (recursive)" , function() {
 	window.DOMINOES_UNIT_STRING = "";
 	
 	dominoes.property( "tail" , "_IN_URL" );
-	dominoes.property( "string" , "TEST_PROP${tail}" );
+	dominoes.property( "string" , "TEST_PROP$(tail)" );
 	
-	dominoes( url( "./data/concat.php?str=${string}" ) , function() {
+	dominoes( url( "./data/concat.php?str=$(string)" ) , function() {
 		
 		equal( window.DOMINOES_UNIT_STRING , "TEST_PROP_IN_URL" , "Properties were properly expanded" );
 		dominoes.property( false );
