@@ -51,7 +51,8 @@ var loadStyleSheet = loader( function( options , callback ) {
 					
 				try {
 					
-					stylesheet.cssRules;
+					// We store so that minifiers don't remove the code
+					callback.r = stylesheet.cssRules;
 					
 					// Webkit:
 					// Webkit browsers don't create the stylesheet object
