@@ -30,8 +30,7 @@ var // Predefined functors
 				
 			if ( isFunction( func ) ) {
 			
-				var STR_PLUS = "+",
-					functors = this,
+				var functors = this,
 					id = parts[ 1 ],
 					functor = functors[ id ] = functors[ id ] || function( _data , thread ) {
 						
