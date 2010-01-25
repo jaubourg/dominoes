@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table xmlns="http://query.yahooapis.com/v1/schema/table.xsd">
+  <meta>
+    <sampleQuery>select * from {table} where url='your_url';</sampleQuery>
+  </meta>
+  <bindings>
+    <select itemPath="" produces="JSON">
+      <urls>
+        <url>{url}</url>
+      </urls>
+      <inputs>
+        <key id='url' type='xs:string' paramType='path' required="true" />
+      </inputs>
+      <execute><![CDATA[
+          // Your javascript goes here. We will run it on our servers
+          response.object = {
+          	url: request.url,
+          	data: request.get().response
+          };
+      ]]></execute>
+    </select>
+  </bindings>
+</table>
