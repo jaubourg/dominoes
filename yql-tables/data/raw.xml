@@ -5,17 +5,14 @@
   </meta>
   <bindings>
     <select itemPath="" produces="JSON">
-      <urls>
-        <url>{url}</url>
-      </urls>
       <inputs>
-        <key id='url' type='xs:string' paramType='path' required="true" />
+        <key id='url' type='xs:string' paramType='path' required="true" batchable="true" maxBatchItems="10" />
       </inputs>
       <execute><![CDATA[
-          // Your javascript goes here. We will run it on our servers
+          var data = y.rest(url).accept('text/plain').get().response;
           response.object = {
-          	url: request.url,
-          	data: request.get().response
+          	url: url,
+          	data: data
           };
       ]]></execute>
     </select>
