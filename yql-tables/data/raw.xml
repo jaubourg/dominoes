@@ -6,38 +6,10 @@
 	<bindings>
 		<select itemPath="" produces="JSON">
 			<inputs>
-				<key id='url' type='xs:string' paramType='path' required="true" batchable="true" maxBatchItems="10" />
+				<key id='url' type='xs:string' paramType='path' required="true" />
 			</inputs>
 			<execute><![CDATA[
-			
-				var list = [],
-					current,
-					request,
-					i = 0,
-					length = url.length;
-				
-				for ( ; i < length ; i++ ) {
-				
-					list.push ( current = { url: url[ i ] } );
-					
-					request = y.rest( url[ i ] ).accept( 'text/plain' ).get();
-					
-					if ( request.response ) {
-					
-						current.content = request.response;
-					
-					} else {
-						
-						current.error = request.status;
-					
-					}
-				
-				}
-				
-				response.object = {
-					list: list
-				};
-			
+				response.object = y.rest( url ).accept( 'text/plain' ).get().response || null;
 			]]></execute>
 		</select>
 	</bindings>
