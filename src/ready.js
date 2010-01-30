@@ -7,7 +7,7 @@ function fireReady() {
 	
 	while ( readyCallbacks[ STR_LENGTH ] ) {
 			args = readyCallbacks.shift();
-			args[0][ STR_APPLY ]( document , slice[ STR_CALL ]( args , 1 ) );
+			args[ 0 ][ STR_APPLY ]( document , slice[ STR_CALL ]( args , 1 ) );
 	}
 	
 	readyFireing = FALSE;
@@ -16,9 +16,8 @@ function fireReady() {
 
 function testReady() {
 					
-	if ( document.body
-		&& document[ STR_GET_ELEMENTS_BY_TAG_NAME ]
-		&& document[ STR_GET_ELEMENTS_BY_TAG_NAME ]("body")[ STR_LENGTH ] ) {
+	if ( ( ( readyState = document.readyState ) ? /complete/.test( readyState ) : TRUE ) 
+		&& document.body ) {
 	
 		readyAcknowledged = readyFireing = TRUE;
 		later( fireReady );
@@ -44,7 +43,7 @@ function ready( func ) {
 			
 		} else if ( readyAcknowledged && ! readyFireing ) {
 			
-			readyFireing = TRUE
+			readyFireing = TRUE;
 			fireReady();
 			
 		}

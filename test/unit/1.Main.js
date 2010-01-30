@@ -321,3 +321,23 @@ test("Definition context (recursive)", function() {
 	} );
 	
 });
+
+test("Dom readyness detection" , function() {
+	
+	expect( 2 )
+	
+	stop();
+	
+	window.notifyFrameReady = function( text , duration ) {
+		strictEqual( text , "WORLD" , "Document was ready" );
+		ok( duration > 1000 , "Polling occured (" + duration / 1000 + " seconds)" );
+		start();
+	};
+	
+	var iframe = document.createElement("iframe");
+
+	iframe.src = url( "data/readyTest.php" );
+		
+	( document.getElementsByTagName("head")[ 0 ] || document.documentElement ).appendChild( iframe );
+	
+});
