@@ -16,6 +16,7 @@
 if ( ! window[ STR_DOMINOES ] )
 		
 (function(
+	STR_ASYNC,
 	STR_CACHE,
 	STR_CALL,
 	STR_CHAIN,

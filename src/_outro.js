@@ -4,7 +4,7 @@ window[ STR_DOMINOES ] = dominoes;
 
 })[ STR_APPLY ](
 	window ,
-	"cache call chain charset createElement getElementsByTagName href length onload onreadystatechange + push readyState url".split( " " )
+	"async cache call chain charset createElement getElementsByTagName href length onload onreadystatechange + push readyState url".split( " " )
 );
 
 })(

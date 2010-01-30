@@ -3,7 +3,7 @@ var loadScript = loader( function ( options , callback ) {
 	var script = document[ STR_CREATE_ELEMENT ]( "script" ),
 		readyState;
 	
-	script.async = TRUE;
+	script[ STR_ASYNC ] = STR_ASYNC;
 	
 	if ( options[ STR_CHARSET ] ) {
 		script[ STR_CHARSET ] = options[ STR_CHARSET ];
