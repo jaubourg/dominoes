@@ -9,7 +9,7 @@ function pollFunction() {
 		
 		try {
 		
-			if ( args[0][ STR_APPLY ]( slice[ STR_CALL ]( args , 1 ) ) !== TRUE ) {
+			if ( args[ 0 ][ STR_APPLY ]( slice[ STR_CALL ]( args , 1 ) ) !== TRUE ) {
 				
 				tmp[ STR_PUSH ]( args );
 				

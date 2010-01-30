@@ -22,9 +22,9 @@ var // Predefined functors
 	},
 
 	// Declare a functor
-	functor = dominoes.functor = dataHolder( function( id , func ) {
+	functor = dominoes.functor = dataHolder( function( _id , func ) {
 	
-		var parts = /^([^$()]+)(?:\(([|SOF+]*)\))?$/.exec( id );
+		var parts = /^([^$()]+)(?:\(([|SOF+]*)\))?$/.exec( _id );
 		
 		if ( parts ) {
 				
