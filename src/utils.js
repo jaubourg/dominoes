@@ -19,7 +19,7 @@ function later( func , self ) {
 	setTimeout( function() {
 		func[ STR_APPLY ]( self || window , slice[ STR_CALL ]( arguments , 2 ) );
 	} , 0 );
-	return this;
+	return dominoes;
 }
 
 dominoes.later = later;

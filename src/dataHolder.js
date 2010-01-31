@@ -38,7 +38,7 @@ function dataHolder( create ) {
 	
 		}
 		
-		return this;
+		return dominoes;
 	};
 
 }
