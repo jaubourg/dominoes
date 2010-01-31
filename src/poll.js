@@ -9,7 +9,7 @@ function pollFunction() {
 		
 		try {
 		
-			if ( args[ 0 ][ STR_APPLY ]( slice[ STR_CALL ]( args , 1 ) ) !== TRUE ) {
+			if ( args[ 0 ][ STR_APPLY ]( slice[ STR_CALL ]( args , 1 ) ) !== FALSE ) {
 				
 				tmp[ STR_PUSH ]( args );
 				
@@ -30,9 +30,9 @@ function pollFunction() {
 
 var pollTimer,
 	pollTasks = [],
-	poll = dominoes.poll = function() {
+	poll = dominoes.poll = function( func ) {
 		
-		if ( isFunction( arguments[ 0 ] ) ) {
+		if ( isFunction( func ) ) {
 			
 			if ( ! pollTasks[ STR_LENGTH ] ) {
 				pollTimer = setInterval( pollFunction , 13 );

@@ -79,7 +79,7 @@ var loadStyleSheet = loader( function( options , callback ) {
 						delete cssCallbacks[ href ];
 					
 						if ( ! --cssPollingNb ) {
-							return TRUE;
+							return FALSE;
 						}
 						
 					}
