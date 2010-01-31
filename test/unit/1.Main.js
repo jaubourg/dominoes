@@ -1,5 +1,17 @@
 module("Main");
 
+test("dominoes returns itself", function() {
+	
+	strictEqual( dominoes() , dominoes , "dominoes returns itself" );
+	
+} );
+
+test("dominoes.run is an alias for dominoes", function() {
+	
+	strictEqual( dominoes.run , dominoes , "dominoes returns itself" );
+	
+} );
+
 test("Function", function() {
 	
 	expect( 1 );
