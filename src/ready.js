@@ -1,5 +1,4 @@
 var readyCallbacks = [],
-	readyState,
 	readyListenedTo = FALSE,
 	readyAcknowledged = FALSE,
 	readyFireing = FALSE;
@@ -17,7 +16,7 @@ function fireReady() {
 
 function testReady() {
 					
-	if ( ( ! ( readyState = document[ STR_READY_STATE ] ) || /complete/.test( readyState ) ) 
+	if ( ( ! document[ STR_READY_STATE ] || document[ STR_READY_STATE ] === "complete" ) 
 		&& document.body ) {
 	
 		readyAcknowledged = readyFireing = TRUE;
