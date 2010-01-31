@@ -40,5 +40,7 @@ var pollTimer,
 			
 			pollTasks[ STR_PUSH ]( arguments );
 		}
+		
+		return dominoes;
 	};
 	
