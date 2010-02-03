@@ -299,7 +299,7 @@ test("Accumulator (simple)" , function() {
 	stop();
 	
 	dominoes("$test(A) $test(F) $test(E) $test(B) $test(D) $test(C)" , function() {
-		strictEqual( result , "A,B,C,D,E,F" , "Accumulator worked" );
+		strictEqual( result , "A,F,E,B,D,C" , "Accumulator worked" );
 		dominoes.functor( false );
 		start();
 	} );
@@ -325,7 +325,7 @@ test("Accumulator (multiple)" , function() {
 	for ( var letter in { D:1 , E:1 , A:1 , C:1 , B:1 , F:1 } ) {
 		dominoes( "$test(" + letter + ")" , function() {
 			if ( ! --number ) {
-				strictEqual( result , "A,B,C,D,E,F" , "Accumulator worked" );
+				strictEqual( result , "D,E,A,C,B,F" , "Accumulator worked" );
 				dominoes.functor( false );
 				start();
 			}
@@ -363,7 +363,7 @@ test("Accumulator (multiple, asynchronous)" , function() {
 	for ( var letter in { D:1 , E:1 , A:1 , C:1 , B:1 , F:1 } ) {
 		dominoes( "$test(" + letter + ")" , function() {
 			if ( ! --number ) {
-				strictEqual( result , "A,B,C,D,E,F" , "Accumulator worked" );
+				strictEqual( result , "D,E,A,C,B,F" , "Accumulator worked" );
 				dominoes.functor( false );
 				start();
 			}
@@ -408,7 +408,7 @@ test("Accumulator (url)", function() {
 	
 	dominoes("$jQuery(core) $jQuery(ajax) $jQuery(event) $jQuery(css)" , function() {
 		
-		strictEqual( window.DOMINOES_UNIT_STRING ,  "ajax core css event" , "URL was properly built" );
+		strictEqual( window.DOMINOES_UNIT_STRING ,  "core ajax event css" , "URL was properly built" );
 		dominoes.functor( false );
 		start();
 		
@@ -436,7 +436,7 @@ test("Accumulator (complex scenario)", function() {
 	
 	function done() {
 		if ( ! --number ) {
-			strictEqual( window.DOMINOES_UNIT_STRING , "ajax core css event manipulation ajaxCode eventCode cssCode manipulationCode" , "Proper order" );
+			strictEqual( window.DOMINOES_UNIT_STRING , "core ajax event css manipulation ajaxCode eventCode cssCode manipulationCode" , "Proper order" );
 			dominoes.rule( false );
 			dominoes.functor( false );
 			start();

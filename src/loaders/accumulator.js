@@ -24,8 +24,6 @@ function accumulator( functor ) {
 					array[ STR_PUSH ]( string );
 				}
 				
-				array.sort();
-				
 				execute( functor( array ) , {} , {} , function() {
 					for ( string in _callbacks ) {
 						_callbacks[ string ]();
