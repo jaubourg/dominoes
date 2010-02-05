@@ -83,6 +83,8 @@
 
 <div id="test">WORLD</div>
 
+<img src="concat.php?wait=4000&nocache=<?= microtime() ?>" />
+
 </body>
 
 </html>

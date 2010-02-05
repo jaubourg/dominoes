@@ -336,13 +336,14 @@ test("Definition context (recursive)", function() {
 
 test("Dom readyness detection" , function() {
 	
-	expect( 2 )
+	expect( 3 )
 	
 	stop();
 	
 	window.notifyFrameReady = function( text , duration ) {
 		strictEqual( text , "WORLD" , "Document was ready" );
 		ok( duration > 1000 , "Polling occured (" + duration / 1000 + " seconds)" );
+		ok( duration < 3000 , "Image didn't block the event" );
 		start();
 	};
 	
