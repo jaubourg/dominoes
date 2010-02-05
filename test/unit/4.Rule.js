@@ -293,3 +293,33 @@ test("Sequenced dependencies (all together)" , function() {
 	});
 	
 });
+
+test("Grouped definitions" , function() {
+	
+	expect( 1 );
+	
+	stop();
+	
+	var string = "";
+	
+	dominoes.rule( {
+		"one": function() {
+			string += "rule 1, ";
+		},
+		"two": function() {
+			string += "rule 2, ";
+		},
+		"three": function() {
+			string += "rule 3";
+		}
+	});
+	
+	dominoes( "one > two > three" , function() {
+
+		strictEqual( string, "rule 1, rule 2, rule 3" , "Grouped definitions worked" );
+		dominoes.rule( false );
+		start();
+		
+	});
+	
+});

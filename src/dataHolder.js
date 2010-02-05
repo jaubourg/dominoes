@@ -3,7 +3,7 @@ function dataHolder( create ) {
 	
 	var data = {};
 	
-	return function( id , del ) {
+	return function func( id , del ) {
 		
 		var length = arguments[ STR_LENGTH ];
 		
@@ -34,7 +34,19 @@ function dataHolder( create ) {
 	
 		} else if ( length ) {
 			
-			return data[ id ];
+			if ( isString( id ) ) {
+			
+				return data[ id ];
+				
+			} else {
+				
+				for ( var name in id ) {
+					
+					func( name , id[ name ] );
+					
+				}
+				
+			}
 	
 		}
 		

@@ -74,3 +74,19 @@ test("Expansion (recursive)" , function() {
 	});
 	
 });
+
+test("Grouped definitions" , function() {
+	
+	dominoes.property( "toDelete" , "value" );
+	
+	dominoes.property({
+		"one": "first",
+		"toDelete": false,
+		"two": "second"
+	});
+	
+	strictEqual( dominoes.property("toDelete") , undefined , "toDelete OK" );
+	strictEqual( dominoes.property("one") , "first" , "one OK" );
+	strictEqual( dominoes.property("two") , "second" , "two OK" );
+	
+});

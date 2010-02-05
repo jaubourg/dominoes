@@ -464,3 +464,34 @@ test("Accumulator (complex scenario)", function() {
 	} );
 	
 });
+
+test("Grouped definitions" , function() {
+	
+	var test = "";
+	
+	dominoes.functor({ 
+		"test(S)": function( string ) {
+			test += string;
+			return {
+				url: "URL"
+			};
+		},
+		"test(O)": function( options ) {
+			test += " " + options.url;
+			return noOp;
+		},
+		"test(F)": function( functor ) {
+			test += " " + ( functor === noOp );
+			return functor;
+		}
+	});
+	
+	stop();
+	
+	dominoes("$test($test($test(STRING)))" , function() {
+		strictEqual( test , "STRING URL true" , "Grouped definition worked" );
+		dominoes.functor( false );
+		start();
+	});
+	
+});
