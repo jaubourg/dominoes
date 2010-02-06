@@ -15,7 +15,9 @@ var	// Regular expressions
 	i = symbolsArray[ STR_LENGTH ];
 
 // Initialize symbols
-for (; --i ; SYMBOLS[ symbolsArray[ i ] ] = i ) {}
+while ( --i ) {
+	SYMBOLS[ symbolsArray[ i ] ] = i;
+}
 
 // Parse a chain
 function parseChain( chain ) {
