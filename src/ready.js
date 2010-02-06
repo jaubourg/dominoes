@@ -1,47 +1,18 @@
 var readyCallbacks = [],
+	readyIndex,
 	readyListenedTo = FALSE,
 	readyAcknowledged = FALSE,
 	readyFireing = FALSE,
-	
-	// Data for event handling
-	readyEventData = {
-		addEventListener: [ "DOMContentLoaded" , "load" , noop ],
-		attachEvent: [ STR_ON_READY_STATE_CHANGE , STR_ON_LOAD , function() {
-
-			if ( documentElement.doScroll ) {
-				
-				try {
-					if ( window.frameElement == NULL ) {
-						
-						( function doScrollCheck() {
-							
-							try {
-								// If IE is used, use the trick by Diego Perini
-								// http://javascript.nwbox.com/IEContentLoaded/
-								documentElement.doScroll( "left" );
-								acknowledgeReady();
-								
-							} catch( _ ) {
-								
-								later( doScrollCheck );
-								
-							}
-							
-						} )();
-						
-					}
-					
-				} catch( e ) {}
-			}
-		}]
-	}
+	readyScript;
 	
 function fireReady() {
 	
-	while ( readyCallbacks[ STR_LENGTH ] ) {
-			args = readyCallbacks.shift();
+	for ( readyIndex = 0 ; readyIndex < readyCallbacks[ STR_LENGTH ] ; ) {
+			args = readyCallbacks[ readyIndex++ ];
 			args[ 0 ][ STR_APPLY ]( document , slice[ STR_CALL ]( args , 1 ) );
 	}
+	
+	readyCallbacks = [];
 	
 	readyFireing = FALSE;
 	
@@ -72,25 +43,31 @@ function ready( func ) {
 		readyAcknowledged = loadedCompleteRegExp.test( document[ STR_READY_STATE ] );
 			
 		if ( ! readyAcknowledged ) {
-			
-			var funcName,
-				info;
+
+			if ( document[ STR_ADD_EVENT_LISTENER ] ) {
+
+				document[ STR_ADD_EVENT_LISTENER ]( "DOMContentLoaded" , acknowledgeReady , FALSE );
+				window[ STR_ADD_EVENT_LISTENER ]( "load" , acknowledgeReady , FALSE );
 				
-			for ( funcName in readyEventData ) {
+			} else {
 				
-				if ( document[ funcName ] ) {
-					
-					info = readyEventData[ funcName ];				
-					
-					document[ funcName ]( info[ 0 ] , acknowledgeReady , FALSE );
-					window[ funcName ]( info[ 1 ] , acknowledgeReady , FALSE );					
-					info[ 2 ]();
-					
-					break;
-				}
+				readyScript = document[ STR_CREATE_ELEMENT ]( "script" );
 				
+				readyScript.src = "http://" + ( new Date() ).getTime();
+				readyScript.defer = "defer";
+				
+				readyScript[ STR_ON_READY_STATE_CHANGE ] = function() {
+					
+					if ( loadedCompleteRegExp.test( readyScript[ STR_READY_STATE ] ) ) {
+						head.removeChild( readyScript );
+						readyScript = undefined;
+						acknowledgeReady();
+					}
+					
+				};
+				
+				head[ STR_APPEND_CHILD ]( readyScript );
 			}
-		
 		}
 		
 	}
