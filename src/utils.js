@@ -9,8 +9,9 @@ var	// Head node
 	// RegExp
 	loadedCompleteRegExp = /loaded|complete/,
 	
-	// Temp var
-	temp;
+	// Type control
+	types = "Array Function String".split(" "),
+	temp = types[ STR_LENGTH ];
 	
 // noop
 function noop() {}
@@ -26,13 +27,13 @@ function later( func , self ) {
 dominoes.later = later;
 
 // Utilities
-for ( temp in { Array:1 , Function:1 , String:1 } ) {
+while ( temp-- ) {
 	( function( name , str ) {
 		str = "[object " + name + "]";
 		dominoes[ "is" + name ] = function( object ) {
 			return toString[ STR_CALL ]( object ) === str;
 		};
-	} )( temp );
+	} )( types[ temp ] );
 }
 
 var isArray = dominoes.isArray,
