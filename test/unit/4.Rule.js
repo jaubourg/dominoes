@@ -250,9 +250,9 @@ test("Sequenced dependencies" , function() {
 	
 	window.DOMINOES_UNIT_STRING = "";
 	
-	dominoes.rule( "module1.load" , url("./data/module.php?number=1&load=") );
-	dominoes.rule( "module2.load" , url("./data/module.php?number=2&load=") );
-	dominoes.rule( "module3.load" , url("./data/module.php?number=3&load=") );
+	dominoes.rule( "module1.load" , url("./data/module.php?number=1") );
+	dominoes.rule( "module2.load" , url("./data/module.php?number=2") );
+	dominoes.rule( "module3.load" , url("./data/module.php?number=3") );
 	
 	dominoes.rule( "module1" , "module1.load > module1.start" );
 	dominoes.rule( "module2" , "module2.load module1 > module2.start" );
