@@ -82,3 +82,5 @@ function ready( func ) {
 	return FALSE;
 }
 
+dominoes.ready = ready;
+
