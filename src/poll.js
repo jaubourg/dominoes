@@ -1,11 +1,12 @@
 function pollFunction() {
 	
 	var tmp = [],
+		i = 0,
 		args;
 	
-	while( pollTasks[ STR_LENGTH ] ) {
+	while( i < pollTasks[ STR_LENGTH ] ) {
 		
-		args = pollTasks.shift();
+		args = pollTasks[ i++ ];
 		
 		try {
 		

@@ -7,6 +7,7 @@ function loader( loadFunction ) {
 		
 		var _options = {},
 			callbacks,
+			i = 0,
 			url = options[ STR_URL ],
 			key;
 			
@@ -36,9 +37,9 @@ function loader( loadFunction ) {
 			
 			loadFunction( options , function() {
 				
-				while( callbacks[ STR_LENGTH ] ) {
+				while( i < callbacks[ STR_LENGTH ] ) {
 					
-					( callbacks.shift() )();
+					callbacks[ i++ ]();
 					
 				}
 				

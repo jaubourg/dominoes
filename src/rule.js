@@ -5,17 +5,13 @@ var rule = dominoes.rule = dataHolder( function( id ) {
 		callbacks = [],
 		rule = rules[ id ] = rules[ id ] || function( callback , thread ) {
 			
-			if ( callback && callback !== noop ) {
-				
-				callbacks[ STR_PUSH ]( callback );
-				
-			}
+			callbacks[ STR_PUSH ]( callback );
 			
 			if ( ! running ) {
 				
 				running = TRUE;
 				
-				var context = this;
+				var context = this, i;
 				
 				( function internal() {
 
@@ -25,9 +21,11 @@ var rule = dominoes.rule = dataHolder( function( id ) {
 						
 					} else if ( callbacks[ STR_LENGTH ] ) {
 						
-						while( callbacks[ STR_LENGTH ] ) {
-							( callbacks.shift() )();
+						for ( i = 0 ; i < callbacks[ STR_LENGTH ] ; ) {
+							callbacks[ i++ ]();
 						}
+						
+						callbacks = [];
 						
 						internal();
 						
