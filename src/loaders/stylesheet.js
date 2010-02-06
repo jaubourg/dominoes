@@ -23,7 +23,7 @@ var loadStyleSheet = loader( function( options , callback ) {
 		} );
 		
 		// Add it to the doc
-		head.appendChild( link );
+		head[ STR_APPEND_CHILD ]( link );
 	
 	} ),
 
