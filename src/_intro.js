@@ -16,6 +16,8 @@
 if ( ! window[ STR_DOMINOES ] )
 		
 (function(
+	STR_ADD_EVENT_LISTENER,
+	STR_APPEND_CHILD,
 	STR_ASYNC,
 	STR_CACHE,
 	STR_CALL,
