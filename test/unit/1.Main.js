@@ -340,8 +340,8 @@ test("Dom readyness detection" , function() {
 	
 	stop();
 	
-	window.notifyFrameReady = function( text , duration ) {
-		strictEqual( text , "WORLD" , "Document was ready" );
+	window.notifyFrameReady = function( elem , duration ) {
+		strictEqual( elem && elem.innerHTML , "WORLD" , "Document was ready" );
 		ok( duration > 1000 , "Polling occured (" + duration / 1000 + " seconds)" );
 		ok( duration < 3000 , "Image didn't block the event" );
 		start();

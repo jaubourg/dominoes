@@ -25,7 +25,7 @@
 		},
 		
 		done: function() {
-			parent.notifyFrameReady( document.getElementById("test").innerHTML , ( new Date() ).getTime() - this.now );
+			parent.notifyFrameReady( document.getElementById("test") , ( new Date() ).getTime() - this.now );
 		}
 		
 	} );
