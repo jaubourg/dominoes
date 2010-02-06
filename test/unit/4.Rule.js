@@ -260,7 +260,7 @@ test("Sequenced dependencies" , function() {
 	
 	dominoes( "module3" , function() {
 		
-		strictEqual( window.DOMINOES_UNIT_STRING , "L3L2L1S1S2S3" , "Script cascading dependencies handled properly" );
+		strictEqual( window.DOMINOES_UNIT_STRING , "S1S2S3" , "Script cascading dependencies handled properly" );
 		dominoes.rule( false );
 		start();
 	
