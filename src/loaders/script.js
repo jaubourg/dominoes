@@ -19,7 +19,7 @@ var loadScript = loader( function ( options , callback ) {
 			// Handle memory leak in IE
 			script[ STR_ON_LOAD ] = script[ STR_ON_READY_STATE_CHANGE ] = NULL;
 			
-			head.removeChild( script );
+			head[ STR_REMOVE_CHILD ]( script );
 
 			if ( callback ) {
 				// Give time for execution (thank you so much, Opera devs!)
