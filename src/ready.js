@@ -3,7 +3,7 @@ var readyCallbacks = [],
 	readyListenedTo = FALSE,
 	readyAcknowledged = FALSE,
 	readyFireing = FALSE,
-	readyScript;
+	readyLink;
 	
 function fireReady() {
 	
@@ -49,24 +49,28 @@ function ready( func ) {
 				document[ STR_ADD_EVENT_LISTENER ]( "DOMContentLoaded" , acknowledgeReady , FALSE );
 				window[ STR_ADD_EVENT_LISTENER ]( "load" , acknowledgeReady , FALSE );
 				
-			} else {
+			} else if ( window[ STR_ATTACH_EVENT ] ) {
 				
-				readyScript = document[ STR_CREATE_ELEMENT ]( "script" );
+				window[ STR_ATTACH_EVENT ]( STR_ON_LOAD , acknowledgeReady );
 				
-				readyScript.src = "http://" + ( new Date() ).getTime();
-				readyScript.defer = "defer";
+				readyLink = document[ STR_CREATE_ELEMENT ]( "link" );
 				
-				readyScript[ STR_ON_READY_STATE_CHANGE ] = function() {
+				readyLink[ STR_HREF ] = document.location;
+				readyLink.rel = STR_STYLESHEET;
+				readyLink[ STR_MEDIA ] = STR_PLUS;
+				
+				readyLink[ STR_ON_READY_STATE_CHANGE ] = function() {
 					
-					if ( loadedCompleteRegExp.test( readyScript[ STR_READY_STATE ] ) ) {
-						head.removeChild( readyScript );
-						readyScript = undefined;
+					if ( loadedCompleteRegExp.test( readyLink[ STR_READY_STATE ] ) ) {
+						
+						head[ STR_REMOVE_CHILD ]( readyLink );
 						acknowledgeReady();
+						
 					}
 					
-				};
+				}
 				
-				head[ STR_APPEND_CHILD ]( readyScript );
+				head[ STR_APPEND_CHILD ]( readyLink );
 			}
 		}
 		
