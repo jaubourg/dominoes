@@ -347,7 +347,7 @@ for ( var delay = 0 ; delay < 3 ; delay++ ) {
 			window.notifyFrameReady = function( elem , duration ) {
 				ok( elem , "Document was ready" );
 				strictEqual( elem && elem.innerHTML , "WORLD" , "Document was ready and parsed" );
-				ok( duration < ( delay + 1 ) * 1000 , "Image didn't block the event (delay to event was " + duration / 1000 + " seconds)" );
+				ok( duration < ( delay + 3 ) * 1000 , "Image didn't block the event (delay to event was " + duration / 1000 + " seconds)" );
 				start();
 			};
 			
