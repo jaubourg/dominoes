@@ -334,22 +334,31 @@ test("Definition context (recursive)", function() {
 	
 });
 
-test("Dom readyness detection" , function() {
+for ( var delay = 0 ; delay < 3 ; delay++ ) {
 	
-	expect( 2 )
-	
-	stop();
-	
-	window.notifyFrameReady = function( elem , duration ) {
-		strictEqual( elem && elem.innerHTML , "WORLD" , "Document was ready" );
-		ok( duration < 3000 , "Image didn't block the event (delay to event was " + duration / 1000 + " seconds)" );
-		start();
-	};
-	
-	var iframe = document.createElement("iframe");
+	( function( delay ) {
 
-	iframe.src = url( "data/readyTest.php" );
+		test("Dom readyness detection (" + delay + "s delay)" , function() {
+			
+			expect( 3 )
+			
+			stop();
+			
+			window.notifyFrameReady = function( elem , duration ) {
+				ok( elem , "Document was ready" );
+				strictEqual( elem && elem.innerHTML , "WORLD" , "Document was ready and parsed" );
+				ok( duration < ( delay + 1 ) * 1000 , "Image didn't block the event (delay to event was " + duration / 1000 + " seconds)" );
+				start();
+			};
+			
+			var iframe = document.createElement("iframe");
 		
-	( document.getElementsByTagName("head")[ 0 ] || document.documentElement ).appendChild( iframe );
+			iframe.src = url( "data/readyTest.php?delay=" + delay );
+				
+			( document.getElementsByTagName("head")[ 0 ] || document.documentElement ).appendChild( iframe );
+			
+		});
 	
-});
+	} )( delay );
+	
+}
