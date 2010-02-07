@@ -10,8 +10,8 @@
 	for ($i = 0; $i < ob_get_level(); $i++) { ob_end_flush(); }
     ob_implicit_flush(1);
     flush();
-?>
-<html>
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr" id="html">
 
 <head>
 	<script type="text/javascript" src="../../dist/dominoes.js"></script>
@@ -59,7 +59,7 @@
 	flush();
     for ($i = 0; $i < ob_get_level(); $i++) { ob_end_flush(); }
     ob_implicit_flush(1);
-	sleep(2);
+	sleep( isset( $_GET[ "delay" ] ) ? $_GET[ "delay" ] : 2 );
 
 ?>
 
@@ -87,4 +87,5 @@
 
 </body>
 
-</html>
+< /html >
+
