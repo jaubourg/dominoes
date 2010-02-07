@@ -1,6 +1,6 @@
 var	// Head node
 	documentElement = document.documentElement,
-	head = document[ STR_GET_ELEMENTS_BY_TAG_NAME ]( "head" )[ 0 ] || documentElement,
+	head = document.getElementsByTagName( "head" )[ 0 ] || documentElement,
 
 	// References
 	toString = {}.toString,

@@ -3,9 +3,9 @@ var loadStyleSheet = loader( function( options , callback ) {
 		var link = document[ STR_CREATE_ELEMENT ]( "link" ),
 			title = options.title;
 	
-		link.rel = STR_STYLESHEET;
+		link.rel = "stylesheet";
 		link.type = "text/css";
-		link[ STR_MEDIA ] = options[ STR_MEDIA ] || "screen";
+		link.media = options.media || "screen";
 		link[ STR_HREF ] = options[ STR_URL ];
 			
 		if ( options[ STR_CHARSET ] ) {
