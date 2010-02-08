@@ -90,3 +90,13 @@ test("Grouped definitions" , function() {
 	strictEqual( dominoes.property("two") , "second" , "two OK" );
 	
 });
+
+test("ifNot" , function() {
+	
+	dominoes.property.ifNot( "ifNot" , "A" );
+	dominoes.property.ifNot( "ifNot" , "B" );
+	
+	strictEqual( dominoes.property("ifNot") , "A" , "ifNot works" );
+	
+})
+

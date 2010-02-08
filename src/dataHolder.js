@@ -3,7 +3,7 @@ function dataHolder( create ) {
 	
 	var data = {};
 	
-	return function func( id , del ) {
+	function func( id , del , ifNot ) {
 		
 		var length = arguments[ STR_LENGTH ];
 		
@@ -17,13 +17,17 @@ function dataHolder( create ) {
 				
 				}
 				
-			} else if (create) {
+			} else if ( ! ifNot || ! data[ id ] ) {
 				
-				create[ STR_APPLY ]( data , arguments );
-				
-			} else {
-				
-				data[ id ] = del;
+				if ( create ) {
+					
+					create[ STR_APPLY ]( data , arguments );
+					
+				} else {
+					
+					data[ id ] = del;
+					
+				}
 				
 			}
 				
@@ -51,7 +55,15 @@ function dataHolder( create ) {
 		}
 		
 		return dominoes;
+	}
+	
+	func.ifNot = function ( id , value ) {
+		
+		return func( id , value , TRUE );
+		
 	};
+	
+	return func;
 
 }
 
