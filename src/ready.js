@@ -46,6 +46,44 @@ var ready = ( function ( readyCallbacks , readyListenedTo , readyAcknowledged , 
 						
 						window[ STR_ATTACH_EVENT ]( STR_ON_LOAD , acknowledgeReady );
 						
+						document[ STR_ATTACH_EVENT ]( STR_ON_READY_STATE_CHANGE , function() {
+							
+							if ( loadedCompleteRegExp.test( document[ STR_READY_STATE ] ) ) {
+								acknowledgeReady();
+							}
+							
+						} );
+						
+						try {
+							
+							if ( window.frameElement == NULL && documentElement[ STR_DO_SCROLL ] ) {
+								
+								( function doScroll() {
+									
+									if ( ! readyAcknowledged ) {
+									
+										try {
+											
+											// If IE is used, use the trick by Diego Perini
+											// http://javascript.nwbox.com/IEContentLoaded/
+											documentElement[ STR_DO_SCROLL ]("left");
+											
+											later( acknowledgeReady );
+											
+										} catch( _ ) {
+											
+											later( doScroll );
+											
+										}
+									}
+									
+								} )();
+								
+							}
+							
+						} catch( _ ) {
+						}
+
 					}
 				}
 				
