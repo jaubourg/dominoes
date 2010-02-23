@@ -4,7 +4,7 @@ window[ STR_DOMINOES ] = dominoes;
 
 })[ STR_APPLY ](
 	window ,
-	"addEventListener appendChild async attachEvent cache call chain charset createElement href length onload onreadystatechange + push readyState removeChild url".split( " " )
+	"addEventListener async attachEvent cache call chain charset createElement doScroll href length onload onreadystatechange + push readyState removeChild url".split( " " )
 );
 
 })(
